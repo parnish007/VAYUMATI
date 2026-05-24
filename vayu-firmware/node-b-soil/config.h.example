@@ -1,0 +1,78 @@
+#pragma once
+
+// ===============================================================================
+//  config.h — VayuMitti Node B (Soil)
+//  ESP8266 NodeMCU / Wemos D1 Mini
+//
+//  SETUP:
+//    1. Copy this file to config.h
+//    2. Fill in WIFI_SSID_1/WIFI_PASS_1 (venue WiFi) and
+//       WIFI_SSID_2/WIFI_PASS_2 (phone hotspot fallback)
+//    3. Set DEMO_SENSOR_MODE 0 when real sensors are wired
+//
+//  CURRENT STATE: Demo/simulated soil readings (DEMO_SENSOR_MODE 1).
+//  Readings are a slow random walk — suitable for presentations without hardware.
+//
+//  TO ADD REAL SENSORS:
+//    1. pH probe analog    → A0 (10kΩ+10kΩ voltage divider; A0 max = 1.0V)
+//    2. DS18B20 soil temp  → D2 (GPIO4) with 4.7kΩ pull-up to 3.3V
+//    3. Capacitive moisture→ external ADC board (A0 already used by pH)
+//    Set DEMO_SENSOR_MODE 0 and uncomment sensor stubs in the .ino.
+// ===============================================================================
+
+// ── WiFi ─────────────────────────────────────────────────────────────────────
+#define WIFI_SSID_1     "YOUR_PRIMARY_WIFI_SSID"
+#define WIFI_PASS_1     "YOUR_PRIMARY_WIFI_PASSWORD"
+#define WIFI_SSID_2     "YOUR_HOTSPOT_SSID"
+#define WIFI_PASS_2     "YOUR_HOTSPOT_PASSWORD"
+#define WIFI_TIMEOUT_MS  15000
+#define WIFI_RETRY_MS    30000
+
+// ── MQTT (HiveMQ public, no auth) ────────────────────────────────────────────
+#define MQTT_HOST       "broker.hivemq.com"
+#define MQTT_PORT       1883
+#define MQTT_TOPIC      "mitti/node/B1/readings"
+#define NODE_ID         "B1"
+#define WARD_ID         "11"
+#define FIELD_ID        "A1"
+#define MQTT_BUF_SIZE   512
+
+// ── Timing ───────────────────────────────────────────────────────────────────
+#define READ_INTERVAL_MS   5000
+
+// ── Demo sensor mode ─────────────────────────────────────────────────────────
+//  1 = generate simulated readings (default — no sensors wired)
+//  0 = read from actual sensors
+#define DEMO_SENSOR_MODE  1
+
+// ── Demo initial values and drift limits ─────────────────────────────────────
+#define DEMO_PH_START       6.8f
+#define DEMO_PH_DRIFT       0.03f
+#define DEMO_PH_MIN         5.5f
+#define DEMO_PH_MAX         8.0f
+
+#define DEMO_MOISTURE_START 52.0f
+#define DEMO_MOISTURE_DRIFT 0.5f
+#define DEMO_MOISTURE_MIN   20.0f
+#define DEMO_MOISTURE_MAX   90.0f
+
+#define DEMO_EC_START       1.2f
+#define DEMO_EC_DRIFT       0.02f
+#define DEMO_EC_MIN         0.3f
+#define DEMO_EC_MAX         4.0f
+
+#define DEMO_TEMP_START     24.0f
+#define DEMO_TEMP_DRIFT     0.1f
+#define DEMO_TEMP_MIN       10.0f
+#define DEMO_TEMP_MAX       40.0f
+
+// ── Status LED ────────────────────────────────────────────────────────────────
+#define PIN_LED          2    // D4 on NodeMCU (built-in LED, active low)
+#define LED_ACTIVE_LOW   1
+
+// ── Future sensor pins (not used when DEMO_SENSOR_MODE 1) ────────────────────
+#define PIN_PH_ADC       A0
+#define PIN_DS18B20      4   // D2 on NodeMCU
+
+// ── HTTP fallback ─────────────────────────────────────────────────────────────
+#define HTTP_PORT        80

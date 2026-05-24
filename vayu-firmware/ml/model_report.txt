@@ -1,0 +1,30 @@
+VayuMitti Soil Health Model Report
+===================================
+
+Model    : DecisionTree (d=8)
+Dataset  : 2000 samples
+Test set : 400 samples (20%)
+Test acc : 0.9975
+Test F1  : 0.9981
+
+                 precision    recall  f1-score   support
+
+           GOOD       0.99      1.00      1.00       140
+         ACIDIC       1.00      0.99      1.00       120
+   DRY_STRESSED       1.00      1.00      1.00        80
+SALINE_ALKALINE       1.00      1.00      1.00        60
+
+       accuracy                           1.00       400
+      macro avg       1.00      1.00      1.00       400
+   weighted avg       1.00      1.00      1.00       400
+
+Feature importance:
+  ph                  : 0.3334
+  ec_mS_cm            : 0.3338
+  moisture_pct        : 0.3328
+  temperature_C       : 0.0000
+
+Exported C header size : 2.59 KB
+Entry point            : int soil_predict(double* input)
+  input[0]=pH  input[1]=EC_mS_cm  input[2]=moisture_pct  input[3]=temp_C
+  returns: 0=GOOD  1=ACIDIC  2=DRY_STRESSED  3=SALINE_ALKALINE

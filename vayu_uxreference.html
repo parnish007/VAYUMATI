@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>VayuMitti — UX Reference v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300;1,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ════════════════════════════════════════════════
+   REFERENCE FILE CHROME
+═══════════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#0a1a0f;--ink2:#122018;--ink3:#1a2e1f;
+  --moss:#1e4028;--moss2:#2a5238;
+  --sage:#3d8b5e;--sage2:#4fa870;--sage3:#7dc99a;
+  --amber:#d4a017;--amber2:#e8b832;--amber3:#f5d06a;
+  --rust:#c44b2b;--rust2:#e05a38;--rust3:#f08060;
+  --sky:#2d7a9a;--sky2:#3d9abf;--sky3:#7cc4e0;
+  --cream:#e8f0ea;--cream2:#f0f5f1;--white:#fafcfb;
+  --text:#c8ddd0;--text2:#8aad96;--text3:#4d7a5e;--text4:#2d5040;
+  --border:rgba(61,139,94,.1);--border2:rgba(61,139,94,.22);--border3:rgba(61,139,94,.4);
+  --ff:'Fraunces',serif;--fb:'Instrument Sans',sans-serif;
+  --r:10px;--r2:16px;--r3:22px;
+}
+html,body{background:#141414;font-family:var(--fb);min-height:100vh;color:#ccc;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#333;border-radius:2px;}
+
+/* REFERENCE CHROME */
+.ref-header{background:#0e0e0e;border-bottom:1px solid #252525;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.ref-logo{font-family:var(--ff);font-size:20px;font-weight:700;color:#7dc99a;letter-spacing:-.5px;}
+.ref-logo span{color:#d4a017;}
+.ref-badge{font-size:10px;background:#1e2e1e;border:1px solid #2d4d2d;border-radius:999px;padding:4px 10px;color:#4fa870;}
+.ref-tabs{display:flex;gap:2px;background:#0e0e0e;border-bottom:1px solid #222;padding:0 24px;overflow-x:auto;}
+.ref-tab{padding:10px 16px;font-size:12px;font-family:var(--fb);color:#555;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .18s;}
+.ref-tab.on{color:#7dc99a;border-bottom-color:#7dc99a;}
+.ref-tab:hover{color:#9dc9a8;}
+.ref-body{padding:32px 24px;max-width:1400px;margin:0 auto;}
+.ref-section{display:none;}
+.ref-section.on{display:block;}
+.ref-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:20px;font-family:var(--fb);}
+.ref-note{font-size:11px;color:#444;line-height:1.7;margin-bottom:20px;padding:10px 14px;border-left:2px solid #2d4d2d;background:#111;}
+
+/* ════════════════════════════════════════════════
+   DEVICE FRAMES
+═══════════════════════════════════════════════ */
+.frames-row{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap;}
+.phone-wrap{flex-shrink:0;}
+.phone-label{font-size:10px;color:#444;text-align:center;margin-bottom:8px;letter-spacing:.8px;}
+.phone{width:320px;border-radius:36px;background:#0a0a0a;border:2px solid #272727;box-shadow:0 30px 80px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.04);overflow:hidden;position:relative;}
+.phone-notch{height:28px;background:#0a0a0a;display:flex;align-items:center;justify-content:center;}
+.phone-notch-pill{width:80px;height:10px;background:#1a1a1a;border-radius:999px;}
+.phone-screen{background:var(--ink);overflow:hidden;}
+.desktop-wrap{flex:1;min-width:600px;}
+.desktop-label{font-size:10px;color:#444;margin-bottom:8px;letter-spacing:.8px;}
+.desktop{background:var(--ink);border-radius:12px;border:1px solid #272727;box-shadow:0 24px 60px rgba(0,0,0,.7);overflow:hidden;}
+.desktop-bar{height:30px;background:#0e0e0e;border-bottom:1px solid #1a1a1a;display:flex;align-items:center;gap:6px;padding:0 12px;}
+.db-dot{width:9px;height:9px;border-radius:50%;}
+
+/* ════════════════════════════════════════════════
+   SHARED COMPONENTS
+═══════════════════════════════════════════════ */
+.aqi-pill-sm{display:inline-flex;align-items:center;gap:5px;background:rgba(196,75,43,.12);border:1px solid rgba(196,75,43,.25);border-radius:999px;padding:3px 9px;font-size:10px;color:#f08060;font-family:var(--fb);}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--rust2);animation:pulse 1.6s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.25;}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.35;}}
+@keyframes barRise{from{height:0;}to{}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+@keyframes ringAnim{from{stroke-dashoffset:251;}to{stroke-dashoffset:76;}}
+@keyframes shimmer{to{transform:translateX(200%);}}
+
+/* ════════════════════════════════════════════════
+   MOBILE SCREEN — SHARED SHELL
+═══════════════════════════════════════════════ */
+.m-topbar{padding:10px 16px 8px;display:flex;align-items:center;justify-content:space-between;}
+.m-logo{font-family:var(--ff);font-size:17px;font-weight:700;color:var(--cream);letter-spacing:-.4px;}
+.m-logo em{color:var(--amber2);font-style:normal;}
+.m-page{padding:0 16px 80px;}
+.m-section-title{font-family:var(--ff);font-size:13px;font-weight:700;color:var(--cream);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.m-section-title span{font-family:var(--fb);font-size:10px;color:var(--text3);font-weight:400;}
+.m-card{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r2);padding:14px;margin-bottom:12px;position:relative;overflow:hidden;}
+.m-card-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;font-family:var(--fb);}
+.m-card-val{font-family:var(--ff);font-size:28px;font-weight:700;color:var(--cream);line-height:1;}
+
+/* Bottom nav */
+.m-bottomnav{position:absolute;bottom:0;left:0;right:0;background:rgba(10,26,15,.96);border-top:1px solid var(--border2);display:flex;backdrop-filter:blur(10px);}
+.m-navitem{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 0 5px;cursor:pointer;}
+.m-navitem svg{width:18px;height:18px;stroke-width:1.6;}
+.m-navitem span{font-size:8px;margin-top:3px;letter-spacing:.3px;}
+.m-navitem.on svg{stroke:var(--sage2);}
+.m-navitem.on span{color:var(--sage2);}
+.m-navitem:not(.on) svg{stroke:#3a4a3f;}
+.m-navitem:not(.on) span{color:#3a4a3f;}
+
+/* ════════════════════════════════════════════════
+   SCREEN 1 — MOBILE OVERVIEW
+═══════════════════════════════════════════════ */
+.m-hero{padding:14px 16px 0;}
+.m-greeting{font-family:var(--ff);font-size:22px;font-weight:300;color:var(--cream);line-height:1.3;margin-bottom:4px;}
+.m-greeting strong{font-weight:700;color:var(--amber2);}
+.m-hero-sub{font-size:11px;color:var(--text2);margin-bottom:14px;}
+.m-aqi-hero{background:linear-gradient(135deg,rgba(196,75,43,.12),rgba(212,160,23,.06));border:1px solid rgba(196,75,43,.22);border-radius:var(--r2);padding:16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.m-aqi-left .val{font-family:var(--ff);font-size:52px;font-weight:900;color:#f08060;line-height:1;}
+.m-aqi-left .unit{font-size:10px;color:var(--text3);margin-top:2px;}
+.m-aqi-left .status{font-size:11px;color:#f08060;font-weight:600;margin-top:5px;}
+.m-aqi-gauge{position:relative;width:80px;height:80px;}
+.m-aqi-gauge svg{transform:rotate(-90deg);}
+.m-aqi-gauge-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:13px;font-weight:700;color:var(--cream);}
+
+/* Today's risk row */
+.m-risk-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.m-risk-card{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r);padding:12px;}
+.m-risk-icon{font-size:16px;margin-bottom:6px;}
+.m-risk-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.m-risk-val{font-family:var(--ff);font-size:17px;font-weight:700;}
+
+/* Advisory strip */
+.m-advisory{background:linear-gradient(135deg,rgba(30,64,40,.6),rgba(42,82,56,.4));border:1px solid var(--border2);border-radius:var(--r2);padding:13px;margin-bottom:12px;}
+.m-advisory-tag{font-size:9px;color:var(--sage3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+.m-advisory-tag::before{content:'';width:16px;height:1px;background:var(--sage3);}
+.m-advisory-text{font-size:12px;color:var(--text);line-height:1.7;}
+.m-advisory-text strong{color:var(--cream);}
+.m-advisory-actions{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap;}
+.m-action-chip{font-size:10px;padding:4px 10px;border-radius:999px;background:rgba(61,139,94,.1);border:1px solid var(--border2);color:var(--sage3);}
+.m-action-chip.warn{background:rgba(212,160,23,.08);border-color:rgba(212,160,23,.2);color:var(--amber2);}
+
+/* People counter */
+.m-people{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r2);padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
+.m-people-num{font-family:var(--ff);font-size:32px;font-weight:900;color:var(--rust2);white-space:nowrap;}
+.m-people-desc{font-size:11px;color:var(--text2);line-height:1.6;}
+.m-people-desc strong{color:var(--cream);display:block;}
+
+/* ════════════════════════════════════════════════
+   SCREEN 2 — MOBILE PERSONAL EXPOSURE
+═══════════════════════════════════════════════ */
+.m-dose-summary{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r2);padding:16px;margin-bottom:12px;text-align:center;}
+.m-dose-big{font-family:var(--ff);font-size:56px;font-weight:900;color:var(--amber2);line-height:1;}
+.m-dose-unit{font-size:11px;color:var(--text3);margin-top:3px;}
+.m-dose-cig{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;background:rgba(196,75,43,.07);border:1px solid rgba(196,75,43,.14);border-radius:var(--r);padding:10px;}
+.m-dose-cig-icon{font-size:22px;}
+.m-dose-cig-val{font-family:var(--ff);font-size:22px;font-weight:700;color:var(--rust2);}
+.m-dose-cig-sub{font-size:10px;color:var(--text3);}
+.m-who-bar{margin-top:11px;}
+.m-who-label{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:5px;}
+.m-who-track{height:6px;background:var(--ink);border-radius:999px;overflow:hidden;}
+.m-who-fill{height:100%;background:linear-gradient(90deg,var(--sage2),var(--amber),var(--rust));border-radius:999px;width:67%;transition:width 1s ease;}
+
+/* Day timeline — horizontal scroll */
+.m-timeline-wrap{overflow-x:auto;margin:0 -16px;padding:0 16px 4px;}
+.m-timeline{display:flex;gap:6px;width:max-content;padding-bottom:4px;}
+.m-timeline-hour{width:44px;text-align:center;cursor:pointer;}
+.m-timeline-bar{height:52px;border-radius:5px 5px 0 0;display:flex;align-items:flex-end;justify-content:center;margin-bottom:3px;}
+.m-timeline-bar-inner{width:34px;border-radius:4px 4px 0 0;min-height:4px;}
+.m-timeline-label{font-size:8px;color:var(--text3);}
+.m-timeline-aqi{font-size:8px;font-weight:600;margin-top:1px;}
+
+/* Route stops — bubble style */
+.m-route{margin-bottom:12px;}
+.m-route-stop{display:flex;gap:10px;margin-bottom:2px;position:relative;}
+.m-route-stop:not(:last-child)::after{content:'';position:absolute;left:14px;top:32px;bottom:-2px;width:1px;background:var(--border2);}
+.m-route-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.rd-g2{background:rgba(61,139,94,.12);border:2px solid var(--sage2);color:var(--sage2);}
+.rd-a2{background:rgba(212,160,23,.1);border:2px solid var(--amber);color:var(--amber2);}
+.rd-r2{background:rgba(196,75,43,.1);border:2px solid var(--rust2);color:var(--rust2);}
+.m-route-bubble{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r);padding:9px 11px;flex:1;margin-bottom:8px;}
+.m-route-place{font-size:12px;font-weight:500;color:var(--cream);}
+.m-route-meta{font-size:10px;color:var(--text3);margin-top:2px;}
+.m-add-stop{width:100%;background:transparent;border:1px dashed var(--border2);border-radius:var(--r);padding:11px;color:var(--sage3);font-size:12px;font-family:var(--fb);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
+.m-add-stop::before{content:'+';font-size:16px;}
+
+/* ════════════════════════════════════════════════
+   SCREEN 3 — MOBILE REWARDS
+═══════════════════════════════════════════════ */
+.m-score-hero{text-align:center;padding:20px 16px 10px;}
+.m-score-ring{display:inline-block;position:relative;}
+.m-score-ring svg{display:block;}
+.m-score-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.m-score-num{font-family:var(--ff);font-size:32px;font-weight:900;color:var(--cream);}
+.m-score-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;}
+.m-rank-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(61,139,94,.08);border:1px solid var(--border2);border-radius:999px;padding:6px 14px;font-size:11px;color:var(--sage3);margin-top:10px;}
+.m-rank-pill strong{color:var(--cream);font-family:var(--ff);}
+
+/* Badges */
+.m-badges-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.m-badge{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r2);padding:12px;text-align:center;cursor:pointer;position:relative;transition:border-color .18s;}
+.m-badge.earned{border-color:rgba(61,139,94,.35);}
+.m-badge.earned::after{content:'✓';position:absolute;top:5px;right:7px;font-size:8px;color:var(--sage2);}
+.m-badge-icon{font-size:24px;margin-bottom:6px;}
+.m-badge.locked .m-badge-icon{filter:grayscale(1);opacity:.4;}
+.m-badge-name{font-size:9px;color:var(--text2);line-height:1.3;}
+.m-badge.locked .m-badge-name{color:var(--text4);}
+.m-badge-pts{font-size:8px;color:var(--sage3);margin-top:3px;font-family:var(--ff);font-weight:700;}
+.m-badge.locked .m-badge-pts{color:var(--text4);}
+.m-badge.locked::before{content:'🔒';position:absolute;top:6px;right:6px;font-size:10px;opacity:.5;}
+
+/* Reward card */
+.m-reward{background:linear-gradient(135deg,rgba(212,160,23,.1),rgba(61,139,94,.06));border:1px solid rgba(212,160,23,.22);border-radius:var(--r2);padding:14px;margin-bottom:12px;}
+.m-reward-kicker{font-size:9px;color:var(--amber2);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+.m-reward-title{font-family:var(--ff);font-size:16px;font-weight:700;color:var(--cream);margin-bottom:8px;}
+.m-reward-bar{height:5px;background:rgba(0,0,0,.3);border-radius:999px;overflow:hidden;margin-bottom:5px;}
+.m-reward-fill{height:100%;background:linear-gradient(90deg,var(--sage2),var(--amber2));border-radius:999px;width:72%;}
+.m-reward-meta{font-size:10px;color:var(--text3);}
+.m-reward-meta strong{color:var(--amber2);}
+
+/* ════════════════════════════════════════════════
+   SCREEN 4 — MOBILE COMMUNITY (MASK WALL)
+═══════════════════════════════════════════════ */
+.m-share-btn{width:100%;background:linear-gradient(135deg,var(--sage),var(--sage2));border:none;border-radius:var(--r2);padding:14px;color:#fff;font-family:var(--ff);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;box-shadow:0 6px 20px rgba(61,139,94,.22);}
+
+.m-wall-count{font-size:11px;color:var(--text2);margin-bottom:10px;}
+.m-wall-count strong{color:var(--cream);}
+.m-wall-compliance{display:flex;align-items:center;gap:8px;margin-bottom:11px;}
+.m-wall-pct{font-family:var(--ff);font-size:18px;font-weight:700;color:var(--sage3);}
+.m-wall-bar-wrap{flex:1;height:4px;background:rgba(0,0,0,.3);border-radius:999px;overflow:hidden;}
+.m-wall-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--sage),var(--sage3));width:34%;}
+.m-wall-label{font-size:10px;color:var(--text3);}
+.m-selfie-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:12px;}
+.m-selfie-thumb{width:100%;aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;font-family:var(--ff);border:2px solid;}
+.m-selfie-thumb.glow{box-shadow:0 0 12px rgba(61,139,94,.55);}
+.selfie-more{width:100%;aspect-ratio:1;border-radius:50%;background:var(--ink2);border:1px dashed var(--border2);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text3);}
+
+/* Ward board */
+.m-ward-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.m-ward-row:last-child{border-bottom:none;}
+.m-ward-rank{font-family:var(--ff);font-size:16px;font-weight:700;width:24px;text-align:center;color:var(--text3);}
+.m-ward-rank.r1{color:var(--amber2);}
+.m-ward-rank.r2{color:var(--cream);}
+.m-ward-rank.r3{color:var(--sage3);}
+.m-ward-name{flex:1;font-size:12px;color:var(--text);}
+.m-ward-name small{display:block;font-size:9px;color:var(--text4);margin-top:1px;}
+.m-ward-score{font-family:var(--ff);font-size:14px;font-weight:700;}
+.m-ward-trend{font-size:10px;margin-left:4px;}
+
+/* ════════════════════════════════════════════════
+   DESKTOP — WARD SENSOR GRID
+═══════════════════════════════════════════════ */
+.d-shell{display:flex;height:600px;}
+.d-sidebar{width:180px;background:#080f0a;border-right:1px solid rgba(30,64,40,.4);padding:14px 0;flex-shrink:0;display:flex;flex-direction:column;}
+.d-logo{padding:0 14px 14px;border-bottom:1px solid rgba(30,64,40,.3);}
+.d-logo-mark{font-family:var(--ff);font-size:16px;font-weight:700;color:var(--cream);letter-spacing:-.4px;}
+.d-logo-mark em{color:var(--amber2);font-style:normal;}
+.d-logo-sub{font-size:9px;color:var(--text4);margin-top:2px;}
+.d-nav-group{font-size:8px;color:var(--text4);letter-spacing:1.2px;text-transform:uppercase;padding:12px 14px 4px;}
+.d-nav-item{display:flex;align-items:center;gap:7px;padding:7px 14px;font-size:11px;color:var(--text3);cursor:pointer;transition:all .15s;}
+.d-nav-item:hover{background:rgba(61,139,94,.05);color:var(--text);}
+.d-nav-item.on{background:rgba(61,139,94,.09);color:var(--sage3);border-right:2px solid var(--sage2);}
+.d-nav-item svg{width:13px;height:13px;stroke-width:1.8;flex-shrink:0;}
+.d-nav-badge{margin-left:auto;background:rgba(196,75,43,.15);color:var(--rust2);font-size:9px;padding:1px 5px;border-radius:999px;}
+.d-status{margin-top:auto;padding:10px 14px;font-size:9px;color:var(--text4);display:flex;align-items:center;gap:5px;}
+.d-dot{width:5px;height:5px;border-radius:50%;background:var(--sage2);animation:pulse 2s infinite;}
+
+.d-main{flex:1;overflow-y:auto;background:var(--ink);}
+.d-topbar{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--ink2);position:sticky;top:0;z-index:10;}
+.d-topbar-title{font-family:var(--ff);font-size:16px;font-weight:700;color:var(--cream);}
+.d-topbar-sub{font-size:10px;color:var(--text3);margin-top:1px;}
+.d-topbar-r{display:flex;align-items:center;gap:8px;}
+.d-pill{font-size:10px;padding:4px 10px;border-radius:999px;background:rgba(61,139,94,.07);border:1px solid var(--border2);color:var(--sage3);}
+.d-pill.warn{background:rgba(212,160,23,.07);border-color:rgba(212,160,23,.18);color:var(--amber2);}
+.d-pill.danger{background:rgba(196,75,43,.07);border-color:rgba(196,75,43,.18);color:var(--rust2);}
+.d-content{padding:16px;}
+
+/* Offline alert banner */
+.d-offline-banner{background:rgba(196,75,43,.08);border:1px solid rgba(196,75,43,.22);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.d-offline-banner-l{display:flex;align-items:center;gap:8px;}
+.d-offline-icon{width:28px;height:28px;border-radius:8px;background:rgba(196,75,43,.12);color:var(--rust2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.d-offline-msg{font-size:11px;color:var(--text2);line-height:1.5;}
+.d-offline-msg strong{color:var(--cream);}
+.d-offline-action{font-size:10px;color:var(--rust2);cursor:pointer;white-space:nowrap;padding:5px 10px;border:1px solid rgba(196,75,43,.22);border-radius:var(--r);background:rgba(196,75,43,.05);}
+
+/* Ward stat row */
+.d-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+.d-stat{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r2);padding:12px;}
+.d-stat-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;margin-bottom:9px;}
+.d-stat-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.d-stat-val{font-family:var(--ff);font-size:22px;font-weight:700;color:var(--cream);}
+.d-stat-sub{font-size:9px;color:var(--text3);margin-top:3px;}
+
+/* Sensor grid */
+.d-sensor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.d-sensor-card{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r2);padding:13px;cursor:pointer;transition:border-color .18s,transform .15s;position:relative;overflow:hidden;}
+.d-sensor-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:2px 0 0 2px;}
+.d-sensor-card.live::before{background:var(--sage2);}
+.d-sensor-card.fallback::before{background:var(--amber);}
+.d-sensor-card.offline::before{background:var(--rust2);}
+.d-sensor-card:hover{border-color:var(--border2);transform:translateY(-1px);}
+.d-sc-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:9px;}
+.d-sc-id{font-family:var(--ff);font-size:13px;font-weight:700;color:var(--cream);}
+.d-sc-loc{font-size:9px;color:var(--text3);margin-top:1px;}
+.d-sc-status{display:flex;align-items:center;gap:4px;font-size:9px;}
+.d-sc-dot{width:6px;height:6px;border-radius:50%;}
+.live .d-sc-dot{background:var(--sage2);animation:pulse 1.6s infinite;}
+.fallback .d-sc-dot{background:var(--amber);}
+.offline .d-sc-dot{background:var(--rust2);}
+.live .d-sc-status{color:var(--sage3);}
+.fallback .d-sc-status{color:var(--amber2);}
+.offline .d-sc-status{color:var(--rust2);}
+.d-sc-reading{margin-bottom:8px;}
+.d-sc-reading-val{font-family:var(--ff);font-size:20px;font-weight:700;}
+.d-sc-reading-label{font-size:9px;color:var(--text3);}
+.d-sc-meta{display:flex;align-items:center;justify-content:space-between;font-size:9px;color:var(--text4);}
+.d-sc-battery{display:flex;align-items:center;gap:3px;}
+.d-sc-batt-bar{width:18px;height:7px;border:1px solid var(--text4);border-radius:2px;position:relative;padding:1px;}
+.d-sc-batt-bar::after{content:'';position:absolute;right:-3px;top:50%;transform:translateY(-50%);width:2px;height:4px;background:var(--text4);border-radius:0 1px 1px 0;}
+.d-sc-batt-fill{height:100%;border-radius:1px;}
+.d-sc-batt-g{background:var(--sage2);}
+.d-sc-batt-a{background:var(--amber2);}
+.d-sc-batt-r{background:var(--rust2);}
+
+/* Time series area */
+.d-charts{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.d-chart-card{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r2);padding:13px;}
+.d-chart-title{font-size:11px;font-weight:600;color:var(--cream);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.d-chart-svg{width:100%;height:72px;}
+.d-chart-lbls{display:flex;justify-content:space-between;font-size:8px;color:var(--text4);margin-top:3px;}
+
+/* ════════════════════════════════════════════════
+   DESKTOP — EXECUTIVE OVERVIEW PANEL
+═══════════════════════════════════════════════ */
+.d-exec-grid{display:grid;grid-template-columns:1fr 320px;gap:12px;height:100%;}
+.d-exec-left{display:flex;flex-direction:column;gap:12px;}
+.d-exec-right{display:flex;flex-direction:column;gap:12px;}
+
+/* Advisory feed */
+.d-adv-list{display:flex;flex-direction:column;gap:7px;}
+.d-adv-item{background:var(--ink2);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;display:flex;gap:10px;align-items:flex-start;}
+.d-adv-ic{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.d-adv-ic-r{background:rgba(196,75,43,.1);color:var(--rust2);}
+.d-adv-ic-a{background:rgba(212,160,23,.1);color:var(--amber2);}
+.d-adv-ic-g{background:rgba(61,139,94,.1);color:var(--sage2);}
+.d-adv-body{flex:1;}
+.d-adv-title{font-size:12px;font-weight:500;color:var(--cream);margin-bottom:2px;}
+.d-adv-text{font-size:10px;color:var(--text2);line-height:1.55;}
+.d-adv-time{font-size:9px;color:var(--text4);flex-shrink:0;padding-top:2px;}
+
+</style>
+</head>
+<body>
+
+<div class="ref-header">
+  <div class="ref-logo">Vāyu<span>Mitti</span> UX Reference</div>
+  <div class="ref-badge">v2 · Community Edition · ECOTHON 2026</div>
+</div>
+
+<div class="ref-tabs">
+  <div class="ref-tab on"   onclick="rt(0,this)">📱 Mobile — Overview</div>
+  <div class="ref-tab"      onclick="rt(1,this)">📱 Mobile — Exposure</div>
+  <div class="ref-tab"      onclick="rt(2,this)">📱 Mobile — Rewards</div>
+  <div class="ref-tab"      onclick="rt(3,this)">📱 Mobile — Community</div>
+  <div class="ref-tab"      onclick="rt(4,this)">🖥 Desktop — Sensor Grid</div>
+  <div class="ref-tab"      onclick="rt(5,this)">🖥 Desktop — Executive</div>
+</div>
+
+<div class="ref-body">
+
+<!-- ══════════════════════════════════════════════
+     SECTION 0 — MOBILE OVERVIEW
+═══════════════════════════════════════════════ -->
+<div class="ref-section on" id="s0">
+  <div class="ref-label">MOBILE / WARD MEMBER — HOME SCREEN</div>
+  <div class="ref-note">
+    Greeting uses the user's name and the time of day. The AQI hero card dominates — the number
+    must be legible from arm's length. People Counter makes the abstract tangible. Advisory strip
+    is always visible, never buried in a tab. No hamburger menus on mobile — everything reachable
+    in two taps via bottom nav.
+  </div>
+  <div class="frames-row">
+    <div class="phone-wrap">
+      <div class="phone-label">WARD MEMBER · MORNING · 8:12 AM</div>
+      <div class="phone">
+        <div class="phone-notch"><div class="phone-notch-pill"></div></div>
+        <div class="phone-screen" style="height:680px;position:relative;">
+
+          <!-- Topbar -->
+          <div class="m-topbar">
+            <div class="m-logo">Vāyu<em>Mitti</em></div>
+            <div class="aqi-pill-sm"><div class="live-dot"></div>AQI 167</div>
+          </div>
+
+          <!-- Hero -->
+          <div class="m-hero">
+            <div class="m-greeting">Good morning,<br><strong>Priya.</strong></div>
+            <div class="m-hero-sub">Ward 11 · 8 May 2026 · Last updated 12s ago</div>
+
+            <!-- AQI Hero Card -->
+            <div class="m-aqi-hero">
+              <div class="m-aqi-left">
+                <div class="val">167</div>
+                <div class="unit">Air Quality Index</div>
+                <div class="status">⚠ Unhealthy for All</div>
+              </div>
+              <div class="m-aqi-gauge">
+                <svg width="80" height="80" viewBox="0 0 80 80">
+                  <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="7"/>
+                  <circle cx="40" cy="40" r="32" fill="none" stroke="#c44b2b" stroke-width="7" stroke-linecap="round"
+                    stroke-dasharray="201" stroke-dashoffset="67" transform="rotate(-90 40 40)"/>
+                </svg>
+                <div class="m-aqi-gauge-val">PM2.5<br><span style="font-size:17px;color:#f08060;">68</span></div>
+              </div>
+            </div>
+
+            <!-- Risk Row -->
+            <div class="m-risk-row">
+              <div class="m-risk-card">
+                <div class="m-risk-icon">🚬</div>
+                <div class="m-risk-label">Today's Dose</div>
+                <div class="m-risk-val" style="color:#f08060;">2.8</div>
+                <div style="font-size:9px;color:#4d7a5e;">cigarettes equiv.</div>
+              </div>
+              <div class="m-risk-card">
+                <div class="m-risk-icon">🌿</div>
+                <div class="m-risk-label">Farm Health</div>
+                <div class="m-risk-val" style="color:#d4a017;">74</div>
+                <div style="font-size:9px;color:#4d7a5e;">pH dropping</div>
+              </div>
+            </div>
+
+            <!-- Advisory -->
+            <div class="m-advisory">
+              <div class="m-advisory-tag">MATI Advisory</div>
+              <div class="m-advisory-text"><strong>Avoid Ring Road until noon.</strong> NO₂ is 2.3× your 30-day average — brick kilns NE are the source. Your soil is also acidifying from the same event.</div>
+              <div class="m-advisory-actions">
+                <div class="m-action-chip warn">N95 mask</div>
+                <div class="m-action-chip warn">Alt route</div>
+                <div class="m-action-chip">Delay fertilizer</div>
+              </div>
+            </div>
+
+            <!-- People Counter -->
+            <div class="m-people">
+              <div class="m-people-num">47K</div>
+              <div class="m-people-desc">
+                <strong>people in monitored wards</strong>
+                are breathing above WHO limits right now.
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Nav -->
+          <div class="m-bottomnav" style="height:56px;">
+            <div class="m-navitem on">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor"/></svg>
+              <span>Home</span>
+            </div>
+            <div class="m-navitem">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 20h.01M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke="currentColor"/></svg>
+              <span>Map</span>
+            </div>
+            <div class="m-navitem">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor"/></svg>
+              <span>Exposure</span>
+            </div>
+            <div class="m-navitem">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor"/></svg>
+              <span>Rewards</span>
+            </div>
+            <div class="m-navitem">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor"/></svg>
+              <span>Ward</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Annotation column -->
+    <div style="max-width:340px;padding-top:40px;">
+      <div style="margin-bottom:20px;">
+        <div style="font-size:11px;color:var(--sage3);font-weight:600;margin-bottom:5px;">① AQI Hero Card</div>
+        <div style="font-size:12px;color:#666;line-height:1.7;">Legible from 1 meter. Color = severity. Gauge gives visual weight. PM2.5 is always the sub-number — it's the WHO reference metric.</div>
+      </div>
+      <div style="margin-bottom:20px;">
+        <div style="font-size:11px;color:var(--amber2);font-weight:600;margin-bottom:5px;">② Risk Row</div>
+        <div style="font-size:12px;color:#666;line-height:1.7;">Two numbers the user owns personally: their body's exposure and their field's health. Not aggregate data — personal stakes.</div>
+      </div>
+      <div style="margin-bottom:20px;">
+        <div style="font-size:11px;color:var(--sage3);font-weight:600;margin-bottom:5px;">③ Advisory Strip</div>
+        <div style="font-size:12px;color:#666;line-height:1.7;">Always on home screen. Never in a sub-page. Action chips are the actual behavioral outputs — tap to log the action and earn PA score points.</div>
+      </div>
+      <div style="margin-bottom:20px;">
+        <div style="font-size:11px;color:var(--rust2);font-weight:600;margin-bottom:5px;">④ People Counter</div>
+        <div style="font-size:12px;color:#666;line-height:1.7;">47,000 is harder to ignore than "AQI 167". The counter makes pollution collective, not just personal. Updates every 30 seconds via SSE.</div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:#555;font-weight:600;margin-bottom:5px;">⑤ Bottom Nav</div>
+        <div style="font-size:12px;color:#666;line-height:1.7;">5 tabs. No hamburger. Active tab is the only green element in the nav — draws the eye immediately. Labels always visible.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECTION 1 — MOBILE EXPOSURE
+═══════════════════════════════════════════════ -->
+<div class="ref-section" id="s1">
+  <div class="ref-label">MOBILE / WARD MEMBER — PERSONAL EXPOSURE TRACKER</div>
+  <div class="ref-note">
+    This is the most interaction-heavy mobile screen. Key principle: adding a stop must feel like
+    sending a WhatsApp message, not filling a government form. Timeline is horizontal scroll —
+    no vertical chart that competes with the route list. The WHO bar is always visible as context.
+  </div>
+  <div class="frames-row">
+    <div class="phone-wrap">
+      <div class="phone-label">TODAY'S EXPOSURE LOG</div>
+      <div class="phone">
+        <div class="phone-notch"><div class="phone-notch-pill"></div></div>
+        <div class="phone-screen" style="height:720px;position:relative;overflow:hidden;">
+          <div style="overflow-y:auto;height:100%;padding-bottom:56px;">
+
+            <div class="m-topbar">
+              <div style="font-family:var(--ff);font-size:17px;font-weight:700;color:var(--cream);">My Exposure</div>
+              <div style="font-size:10px;color:var(--text3);">8 May 2026</div>
+            </div>
+
+            <div class="m-page">
+
+              <!-- Dose Summary -->
+              <div class="m-dose-summary">
+                <div class="m-dose-big">340</div>
+                <div class="m-dose-unit">μg/m³ PM2.5 inhaled today</div>
+                <div class="m-dose-cig">
+                  <div class="m-dose-cig-icon">🚬</div>
+                  <div>
+                    <div class="m-dose-cig-val">2.8</div>
+                    <div class="m-dose-cig-sub">cigarette equiv · without N95</div>
+                  </div>
+                </div>
+                <div class="m-who-bar">
+                  <div class="m-who-label">
+                    <span>WHO daily limit</span>
+                    <span style="color:var(--amber2);">67% consumed · 3 days left</span>
+                  </div>
+                  <div class="m-who-track"><div class="m-who-fill"></div></div>
+                </div>
+              </div>
+
+              <!-- Day Timeline -->
+              <div class="m-section-title">Hourly AQI <span>scroll →</span></div>
+              <div class="m-timeline-wrap">
+                <div class="m-timeline">
+                  <!-- Bars -->
+                  <div class="m-timeline-hour" style="opacity:.7;"><div class="m-timeline-bar"><div class="m-timeline-bar-inner" style="height:18px;background:#3d8b5e;"></div></div><div class="m-timeline-label">6am</div><div class="m-timeline-aqi" style="color:#7dc99a;">72</div></div>
+                  <div class="m-timeline-hour" style="opacity:.7;"><div class="m-timeline-bar"><div class="m-timeline-bar-inner" style="height:22px;background:#3d8b5e;"></div></div><div class="m-timeline-label">7am</div><div class="m-timeline-aqi" style="color:#7dc99a;">85</div></div>
+                  <div class="m-timeline-hour"><div class="m-timeline-bar"><div class="m-timeline-bar-inner" style="height:32px;background:#d4a017;"></div></div><div class="m-timeline-label">8am</div><div class="m-timeline-aqi" style="color:#e8b832;">120</div></div>
+                  <div class="m-timeline-hour"><div class="m-timeline-bar"><div class="m-timeline-bar-inner" style="height:40px;background:#c44b2b;"></div></div><div class="m-timeline-label">9am</div><div class="m-timeline-aqi" style="color:#f08060;">155</div></div>
+                  <div class="m-timeline-hour"><div class="m-timeline-bar"><div class="m-timeline-bar-inner" style="height:44px;background:#c44b2b;"></div></div><div class="m-timeline-label">10am</div><div class="m-timeline-aqi" style="color:#f08060;">167</div></div>
+                  <div class="m-timeline-hour"><div class="m-timeline-bar"><div class="m-timeline-bar-inner" style="height:42px;background:#c44b2b;"></div></div><div class="m-timeline-label">11am</div><div class="m-timeline-aqi" style="color:#f08060;">161</div></div>
+                  <div class="m-timeline-hour"><div class="m-timeline-bar"><div class="m-timeline-bar-inner" style="height:50px;background:#c44b2b;"></div></div><div class="m-timeline-label">12pm</div><div class="m-timeline-aqi" style="color:#f08060;">195</div></div>
+                  <div class="m-timeline-hour" style="border:1px solid rgba(61,139,94,.3);border-radius:6px 6px 0 0;"><div class="m-timeline-bar"><div class="m-timeline-bar-inner" style="height:46px;background:#c44b2b;"></div></div><div class="m-timeline-label" style="color:var(--sage3);">Now</div><div class="m-timeline-aqi" style="color:#f08060;">167</div></div>
+                </div>
+              </div>
+
+              <div style="height:14px;"></div>
+
+              <!-- Route stops — bubble style -->
+              <div class="m-section-title">Today's Route <span>tap to edit</span></div>
+              <div class="m-route">
+                <div class="m-route-stop">
+                  <div class="route-dot rd-g2" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:2px;background:rgba(61,139,94,.12);border:2px solid #4fa870;color:#4fa870;">7</div>
+                  <div class="m-route-bubble">
+                    <div class="m-route-place">Home — Baneshwor</div>
+                    <div class="m-route-meta">7:00 AM · 45 min · AQI <span style="color:#7dc99a;">89</span></div>
+                  </div>
+                </div>
+                <div class="m-route-stop">
+                  <div class="route-dot rd-r2" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:2px;background:rgba(196,75,43,.1);border:2px solid #c44b2b;color:#c44b2b;">!</div>
+                  <div class="m-route-bubble" style="border-color:rgba(196,75,43,.2);">
+                    <div class="m-route-place">Ring Road Bus</div>
+                    <div class="m-route-meta">8:15 AM · 32 min · AQI <span style="color:#f08060;">181</span> — highest segment</div>
+                  </div>
+                </div>
+                <div class="m-route-stop">
+                  <div class="route-dot rd-a2" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:2px;background:rgba(212,160,23,.1);border:2px solid #d4a017;color:#d4a017;">~</div>
+                  <div class="m-route-bubble">
+                    <div class="m-route-place">Office — New Baneshwor</div>
+                    <div class="m-route-meta">9:00 AM · 6h indoors · AQI <span style="color:#e8b832;">124</span></div>
+                  </div>
+                </div>
+                <button class="m-add-stop">Add next stop</button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Bottom Nav -->
+          <div class="m-bottomnav" style="height:56px;">
+            <div class="m-navitem"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor"/></svg><span>Home</span></div>
+            <div class="m-navitem"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20h.01M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke="currentColor"/></svg><span>Map</span></div>
+            <div class="m-navitem on"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor"/></svg><span>Exposure</span></div>
+            <div class="m-navitem"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor"/></svg><span>Rewards</span></div>
+            <div class="m-navitem"><svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor"/></svg><span>Ward</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width:340px;padding-top:40px;">
+      <div style="margin-bottom:20px;"><div style="font-size:11px;color:var(--sage3);font-weight:600;margin-bottom:5px;">Dose Number</div><div style="font-size:12px;color:#666;line-height:1.7;">The μg number is the raw data. The cigarettes are the meaning. Show both but make the cigarettes the emotional anchor — it triggers visceral understanding immediately.</div></div>
+      <div style="margin-bottom:20px;"><div style="font-size:11px;color:var(--amber2);font-weight:600;margin-bottom:5px;">WHO Bar</div><div style="font-size:12px;color:#666;line-height:1.7;">Always at the top of the screen. The gradient (green→amber→red) communicates severity progression without a legend. "3 days left" makes the weekly budget feel finite and real.</div></div>
+      <div style="margin-bottom:20px;"><div style="font-size:11px;color:var(--sage3);font-weight:600;margin-bottom:5px;">Horizontal Timeline</div><div style="font-size:12px;color:#666;line-height:1.7;">Scrolls left-to-right chronologically. Current hour is highlighted with a green border. Bar height = AQI. Color = severity category. Tap a bar for tooltip. Never a static chart.</div></div>
+      <div><div style="font-size:11px;color:var(--rust2);font-weight:600;margin-bottom:5px;">Route as Bubbles</div><div style="font-size:12px;color:#666;line-height:1.7;">Each stop is a chat bubble, not a form row. Add Stop button looks like a WhatsApp "+" — the mental model is familiar. AQI is auto-populated from nearest sensor — user just sets the place and time.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECTION 2 — MOBILE REWARDS
+═══════════════════════════════════════════════ -->
+<div class="ref-section" id="s2">
+  <div class="ref-label">MOBILE / WARD MEMBER — REWARDS & BADGES</div>
+  <div class="ref-note">
+    The PA score ring is the identity anchor of this screen. Users should feel ownership over
+    their score the way they feel ownership over a step count. Badges mix earned (full color,
+    glowing) and locked (greyed, with one-sentence unlock condition on tap). The reward card
+    shows what is achievable — even if the physical prize is still a few weeks away.
+  </div>
+  <div class="frames-row">
+    <div class="phone-wrap">
+      <div class="phone-label">REWARDS · PA SCORE 68</div>
+      <div class="phone">
+        <div class="phone-notch"><div class="phone-notch-pill"></div></div>
+        <div class="phone-screen" style="height:720px;position:relative;overflow:hidden;">
+          <div style="overflow-y:auto;height:100%;padding-bottom:56px;">
+
+            <div class="m-topbar">
+              <div style="font-family:var(--ff);font-size:17px;font-weight:700;color:var(--cream);">Rewards</div>
+              <div style="font-size:10px;color:var(--text3);">Week of 5 May</div>
+            </div>
+
+            <!-- Score hero -->
+            <div class="m-score-hero">
+              <div class="m-score-ring">
+                <svg width="140" height="140" viewBox="0 0 140 140">
+                  <circle cx="70" cy="70" r="56" fill="none" stroke="rgba(61,139,94,.08)" stroke-width="12"/>
+                  <circle cx="70" cy="70" r="56" fill="none" stroke="url(#sg)" stroke-width="12"
+                    stroke-linecap="round" stroke-dasharray="351" stroke-dashoffset="113"
+                    transform="rotate(-90 70 70)"/>
+                  <defs>
+                    <linearGradient id="sg" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stop-color="#3d8b5e"/>
+                      <stop offset="100%" stop-color="#d4a017"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div class="m-score-center">
+                  <div class="m-score-num">68</div>
+                  <div class="m-score-label">PA Score</div>
+                </div>
+              </div>
+              <div style="margin-top:10px;">
+                <div class="m-rank-pill">You are <strong style="margin:0 4px;">#7</strong> in Ward 11 this week</div>
+              </div>
+              <div style="font-size:10px;color:var(--text3);margin-top:8px;">3 more points → move to #6</div>
+            </div>
+
+            <div class="m-page">
+
+              <!-- Reward card -->
+              <div class="m-reward">
+                <div class="m-reward-kicker">🎁 Next Reward</div>
+                <div class="m-reward-title">Subsidised N95 Pack</div>
+                <div class="m-reward-bar"><div class="m-reward-fill"></div></div>
+                <div class="m-reward-meta"><strong>Top 3 needed</strong> · You are at #7 · 72 PA score needed · You have 68</div>
+              </div>
+
+              <!-- Badges -->
+              <div class="m-section-title">Your Badges <span>4 earned</span></div>
+              <div class="m-badges-grid">
+                <div class="m-badge earned">
+                  <div class="m-badge-icon">👣</div>
+                  <div class="m-badge-name">First Step</div>
+                  <div class="m-badge-pts">+10 pts</div>
+                </div>
+                <div class="m-badge earned">
+                  <div class="m-badge-icon">🛡</div>
+                  <div class="m-badge-name">Mask Hero</div>
+                  <div class="m-badge-pts">+25 pts</div>
+                </div>
+                <div class="m-badge earned">
+                  <div class="m-badge-icon">❤️</div>
+                  <div class="m-badge-name">Guardian</div>
+                  <div class="m-badge-pts">+40 pts</div>
+                </div>
+                <div class="m-badge earned">
+                  <div class="m-badge-icon">🌱</div>
+                  <div class="m-badge-name">Soil Ally</div>
+                  <div class="m-badge-pts">+35 pts</div>
+                </div>
+                <div class="m-badge locked">
+                  <div class="m-badge-icon">🛤</div>
+                  <div class="m-badge-name">Clean Commuter</div>
+                  <div class="m-badge-pts">+30 pts</div>
+                </div>
+                <div class="m-badge locked">
+                  <div class="m-badge-icon">🔥</div>
+                  <div class="m-badge-name">7-Day Streak</div>
+                  <div class="m-badge-pts">+50 pts</div>
+                </div>
+                <div class="m-badge locked">
+                  <div class="m-badge-icon">🏆</div>
+                  <div class="m-badge-name">Ward Champion</div>
+                  <div class="m-badge-pts">+100 pts</div>
+                </div>
+              </div>
+
+              <!-- Tip -->
+              <div style="background:rgba(61,139,94,.06);border:1px solid var(--border);border-radius:var(--r);padding:11px;margin-top:4px;">
+                <div style="font-size:9px;color:var(--sage3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;">MATI Tip</div>
+                <div style="font-size:11px;color:var(--text2);line-height:1.65;">Take an alternate route Tuesday morning — Ring Road AQI is forecast at 170+. That earns you the <strong style="color:var(--cream);">Clean Commuter</strong> badge and 30 points.</div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="m-bottomnav" style="height:56px;">
+            <div class="m-navitem"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor"/></svg><span>Home</span></div>
+            <div class="m-navitem"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20h.01M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke="currentColor"/></svg><span>Map</span></div>
+            <div class="m-navitem"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor"/></svg><span>Exposure</span></div>
+            <div class="m-navitem on"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor"/></svg><span>Rewards</span></div>
+            <div class="m-navitem"><svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor"/></svg><span>Ward</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width:340px;padding-top:40px;">
+      <div style="margin-bottom:20px;"><div style="font-size:11px;color:var(--sage3);font-weight:600;margin-bottom:5px;">PA Score Ring</div><div style="font-size:12px;color:#666;line-height:1.7;">Gradient green→amber matches the reward tension: you're doing well but there's still room. The rank below the ring is the social hook — people are fundamentally competitive. "You are #7" is more motivating than "Score: 68".</div></div>
+      <div style="margin-bottom:20px;"><div style="font-size:11px;color:var(--amber2);font-weight:600;margin-bottom:5px;">Reward Card</div><div style="font-size:12px;color:#666;line-height:1.7;">The progress bar must never be full. If the user reaches top 3, replace with next tier. The reward must always feel four points away — achievable but not trivial.</div></div>
+      <div style="margin-bottom:20px;"><div style="font-size:11px;color:var(--sage3);font-weight:600;margin-bottom:5px;">Badge States</div><div style="font-size:12px;color:#666;line-height:1.7;">Earned badges glow. Locked badges show the icon (so the user knows what's coming) but greyed. Tapping a locked badge shows the exact unlock condition — removes ambiguity and gives a micro-goal.</div></div>
+      <div><div style="font-size:11px;color:var(--rust2);font-weight:600;margin-bottom:5px;">MATI Tip</div><div style="font-size:12px;color:#666;line-height:1.7;">The agent personalises one specific action the user can take this week to advance. Not generic advice — a specific day, route, and outcome. This is generated by the compute_protective_score tool.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECTION 3 — MOBILE COMMUNITY
+═══════════════════════════════════════════════ -->
+<div class="ref-section" id="s3">
+  <div class="ref-label">MOBILE / WARD MEMBER — COMMUNITY (MASK WALL + WARD BOARD)</div>
+  <div class="ref-note">
+    The Mask Wall is the emotional centrepiece. The green glow on the grid appears only when ward
+    compliance crosses 30% — it's an earned visual, not a default. The Ward Board uses
+    difficulty-adjusted scores so kiln-adjacent wards aren't permanently last.
+  </div>
+  <div class="frames-row">
+    <div class="phone-wrap">
+      <div class="phone-label">COMMUNITY · WARD 11 · AQI 167</div>
+      <div class="phone">
+        <div class="phone-notch"><div class="phone-notch-pill"></div></div>
+        <div class="phone-screen" style="height:720px;position:relative;overflow:hidden;">
+          <div style="overflow-y:auto;height:100%;padding-bottom:56px;">
+
+            <div class="m-topbar">
+              <div style="font-family:var(--ff);font-size:17px;font-weight:700;color:var(--cream);">Community</div>
+              <div class="aqi-pill-sm"><div class="live-dot"></div>Ward 11</div>
+            </div>
+
+            <div class="m-page">
+
+              <!-- Share button -->
+              <button class="m-share-btn">📷 Share Your Mask Today</button>
+
+              <!-- Compliance meter -->
+              <div class="m-section-title">Mask Wall — Today <span>Ward 11</span></div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <div class="m-wall-pct">34%</div>
+                <div style="flex:1;">
+                  <div class="m-wall-bar-wrap"><div class="m-wall-bar-fill"></div></div>
+                  <div style="font-size:9px;color:var(--text3);margin-top:2px;">of advisory recipients wore a mask</div>
+                </div>
+              </div>
+              <div style="font-size:10px;color:var(--sage3);margin-bottom:10px;padding:6px 10px;background:rgba(61,139,94,.07);border-radius:var(--r);border:1px solid var(--border2);">✦ Ward 11 is protecting itself today — 34 selfies received</div>
+
+              <!-- Selfie grid -->
+              <div class="m-selfie-grid">
+                <div class="m-selfie-thumb glow" style="background:linear-gradient(135deg,#2a5238,#3d8b5e);border-color:#4fa870;">PR</div>
+                <div class="m-selfie-thumb glow" style="background:linear-gradient(135deg,#1e3a5f,#2d7a9a);border-color:#4fa870;">RK</div>
+                <div class="m-selfie-thumb glow" style="background:linear-gradient(135deg,#3d2a1e,#7a4a2d);border-color:#4fa870;">SM</div>
+                <div class="m-selfie-thumb glow" style="background:linear-gradient(135deg,#2d1e3d,#5a3a7a);border-color:#4fa870;">BT</div>
+                <div class="m-selfie-thumb glow" style="background:linear-gradient(135deg,#1e3d2a,#3d8b5e);border-color:#4fa870;">AK</div>
+                <div class="m-selfie-thumb" style="background:linear-gradient(135deg,#1e3a1e,#2a5a2a);border-color:#3d8b5e;">NR</div>
+                <div class="m-selfie-thumb" style="background:linear-gradient(135deg,#3a2a1e,#6a4a28);border-color:#3d8b5e;">PD</div>
+                <div class="m-selfie-thumb" style="background:linear-gradient(135deg,#1e2a3d,#2a3d6a);border-color:#3d8b5e;">KS</div>
+                <div class="m-selfie-thumb" style="background:linear-gradient(135deg,#2a1e3d,#4a2a7a);border-color:#3d8b5e;">MG</div>
+                <div class="selfie-more">+25<br>more</div>
+              </div>
+
+              <div style="height:18px;"></div>
+
+              <!-- Ward Board -->
+              <div class="m-section-title">Clean Ward Board <span>This week</span></div>
+              <div style="background:var(--ink2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:12px;">
+                <div class="m-ward-row" style="padding:9px 12px;">
+                  <div class="m-ward-rank r1">1</div>
+                  <div class="m-ward-name">Ward 8 — Bansbari<small>AQI 89 · Trend ↑ improving</small></div>
+                  <div><div class="m-ward-score" style="color:var(--sage3);">91</div><div class="m-ward-trend" style="color:var(--sage2);">▲</div></div>
+                </div>
+                <div class="m-ward-row" style="padding:9px 12px;">
+                  <div class="m-ward-rank r2">2</div>
+                  <div class="m-ward-name">Ward 19 — Patan<small>AQI 78 · Trend → stable</small></div>
+                  <div><div class="m-ward-score" style="color:var(--sage3);">88</div><div class="m-ward-trend" style="color:var(--text3);">→</div></div>
+                </div>
+                <div class="m-ward-row" style="padding:9px 12px;">
+                  <div class="m-ward-rank r3">3</div>
+                  <div class="m-ward-name">Ward 5 — Naxal<small>AQI 112 · Trend ↑ improving</small></div>
+                  <div><div class="m-ward-score" style="color:var(--sage2);">79</div><div class="m-ward-trend" style="color:var(--sage2);">▲</div></div>
+                </div>
+                <div class="m-ward-row" style="padding:9px 12px;background:rgba(212,160,23,.04);">
+                  <div class="m-ward-rank" style="color:var(--amber2);">5</div>
+                  <div class="m-ward-name" style="color:var(--cream);">Ward 11 — New Baneshwor ★<small style="color:var(--amber2);">You are here · AQI 167</small></div>
+                  <div><div class="m-ward-score" style="color:var(--amber2);">61</div><div class="m-ward-trend" style="color:var(--amber2);">▲</div></div>
+                </div>
+              </div>
+              <div style="font-size:10px;color:var(--text4);line-height:1.6;">Scores adjusted for kiln proximity and PA engagement. Ward 11 improved 2 positions this week from community action.</div>
+
+            </div>
+          </div>
+
+          <div class="m-bottomnav" style="height:56px;">
+            <div class="m-navitem"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor"/></svg><span>Home</span></div>
+            <div class="m-navitem"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20h.01M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke="currentColor"/></svg><span>Map</span></div>
+            <div class="m-navitem"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor"/></svg><span>Exposure</span></div>
+            <div class="m-navitem"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor"/></svg><span>Rewards</span></div>
+            <div class="m-navitem on"><svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor"/></svg><span>Ward</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width:340px;padding-top:40px;">
+      <div style="margin-bottom:20px;"><div style="font-size:11px;color:var(--sage3);font-weight:600;margin-bottom:5px;">Share Button Visibility</div><div style="font-size:12px;color:#666;line-height:1.7;">The "Share Your Mask" button only appears when ward AQI > 150. It's invisible on clean days. This makes it contextually meaningful — not spam. On demo day with AQI 167, it's visible and prominent.</div></div>
+      <div style="margin-bottom:20px;"><div style="font-size:11px;color:var(--amber2);font-weight:600;margin-bottom:5px;">The Green Glow</div><div style="font-size:12px;color:#666;line-height:1.7;">The glow on selfie thumbnails is not an animation — it's a steady warm green box-shadow. It only appears when compliance crosses 30%. It's earned, not default. Judges notice the absence of glow on a low-compliance ward immediately.</div></div>
+      <div style="margin-bottom:20px;"><div style="font-size:11px;color:var(--sage3);font-weight:600;margin-bottom:5px;">Ward Board Anchoring</div><div style="font-size:12px;color:#666;line-height:1.7;">User's ward is always pinned visible with a ★ marker and amber highlight — even if it's #11 of 12. They can always see where they stand. The "improved 2 positions" note is the hook that makes them want to come back next week.</div></div>
+      <div><div style="font-size:11px;color:var(--rust2);font-weight:600;margin-bottom:5px;">Difficulty Multiplier</div><div style="font-size:12px;color:#666;line-height:1.7;">Ward 11 is near kilns. Without the multiplier, it would always rank last — making the board unfair and demoralizing. The multiplier rewards the community for what they can control (PA actions) not what they can't (industrial proximity).</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECTION 4 — DESKTOP SENSOR GRID
+═══════════════════════════════════════════════ -->
+<div class="ref-section" id="s4">
+  <div class="ref-label">DESKTOP / WARD EXECUTIVE — SENSOR NODE GRID</div>
+  <div class="ref-note">
+    The ward executive's primary job is network health, not personal exposure. This view shows
+    all nodes with their live status, battery, signal, and latest readings. An offline banner
+    fires immediately when any node drops. Three deployment option visual is shown above the grid.
+  </div>
+  <div class="desktop-wrap" style="max-width:900px;">
+    <div class="desktop-label">WARD EXECUTIVE · WARD 11 · SENSOR MANAGEMENT</div>
+    <div class="desktop">
+      <div class="desktop-bar">
+        <div class="db-dot" style="background:#ff5f56;"></div>
+        <div class="db-dot" style="background:#ffbd2e;"></div>
+        <div class="db-dot" style="background:#27c93f;"></div>
+        <span style="font-size:11px;color:#444;margin-left:8px;">vayu-mitti.vercel.app/ward</span>
+      </div>
+      <div class="d-shell">
+
+        <!-- Sidebar -->
+        <div class="d-sidebar">
+          <div class="d-logo">
+            <div class="d-logo-mark">Vāyu<em>Mitti</em></div>
+            <div class="d-logo-sub">Ward Executive</div>
+          </div>
+          <div class="d-nav-group">Monitor</div>
+          <div class="d-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            Overview
+          </div>
+          <div class="d-nav-item on">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><path d="M10.4 13.6l-3.8 3.8M13.6 10.4l3.8-3.8"/></svg>
+            Sensor Grid
+          </div>
+          <div class="d-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h.01M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+            Live Map
+          </div>
+          <div class="d-nav-group">Insights</div>
+          <div class="d-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            Analytics
+          </div>
+          <div class="d-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            Alerts
+            <span class="d-nav-badge">3</span>
+          </div>
+          <div class="d-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Gov. PDF
+          </div>
+          <div class="d-status"><div class="d-dot"></div>2 live · 1 fallback</div>
+        </div>
+
+        <!-- Main content -->
+        <div class="d-main">
+          <div class="d-topbar">
+            <div>
+              <div class="d-topbar-title">Ward 11 — Sensor Grid</div>
+              <div class="d-topbar-sub">New Baneshwor · 3 nodes registered · health-check every 30s</div>
+            </div>
+            <div class="d-topbar-r">
+              <div class="d-pill">2 live</div>
+              <div class="d-pill warn">1 fallback</div>
+            </div>
+          </div>
+
+          <div class="d-content">
+
+            <!-- Offline alert banner -->
+            <div class="d-offline-banner">
+              <div class="d-offline-banner-l">
+                <div class="d-offline-icon">⚠</div>
+                <div class="d-offline-msg">
+                  <strong>Node G3 offline · Fallback active</strong><br>
+                  OpenAQ station data serving Ward 12. Readings labeled "estimated". Last live: 14 min ago. Check power and WiFi.
+                </div>
+              </div>
+              <div class="d-offline-action">Check Node →</div>
+            </div>
+
+            <!-- Stats -->
+            <div class="d-stat-row">
+              <div class="d-stat">
+                <div class="d-stat-icon" style="background:rgba(61,139,94,.1);color:var(--sage2);">⬤</div>
+                <div class="d-stat-label">Nodes Online</div>
+                <div class="d-stat-val" style="color:var(--sage3);">2</div>
+                <div class="d-stat-sub">of 3 registered</div>
+              </div>
+              <div class="d-stat">
+                <div class="d-stat-icon" style="background:rgba(212,160,23,.1);color:var(--amber2);">⟳</div>
+                <div class="d-stat-label">Fallback</div>
+                <div class="d-stat-val" style="color:var(--amber2);">1</div>
+                <div class="d-stat-sub">Node G3 · OpenAQ</div>
+              </div>
+              <div class="d-stat">
+                <div class="d-stat-icon" style="background:rgba(196,75,43,.1);color:var(--rust2);">↑</div>
+                <div class="d-stat-label">Ward AQI</div>
+                <div class="d-stat-val" style="color:var(--rust2);">167</div>
+                <div class="d-stat-sub">Unhealthy · +23 since 6am</div>
+              </div>
+              <div class="d-stat">
+                <div class="d-stat-icon" style="background:rgba(45,122,154,.1);color:var(--sky2);">⚡</div>
+                <div class="d-stat-label">Advisories</div>
+                <div class="d-stat-val" style="color:var(--sky2);">3</div>
+                <div class="d-stat-sub">Sent today by MATI</div>
+              </div>
+            </div>
+
+            <!-- Sensor cards -->
+            <div class="d-sensor-grid">
+              <!-- Node A1 — Live Air -->
+              <div class="d-sensor-card live">
+                <div class="d-sc-header">
+                  <div>
+                    <div class="d-sc-id">Node A1</div>
+                    <div class="d-sc-loc">Air · New Baneshwor · Rooftop</div>
+                  </div>
+                  <div class="d-sc-status"><div class="d-sc-dot"></div>Live · 8s ago</div>
+                </div>
+                <div class="d-sc-reading">
+                  <div class="d-sc-reading-val" style="color:#f08060;">AQI 167</div>
+                  <div class="d-sc-reading-label">PM2.5 68μg · NO₂ 0.09ppm · OLED active</div>
+                </div>
+                <div class="d-sc-meta">
+                  <div class="d-sc-battery">
+                    <div class="d-sc-batt-bar"><div class="d-sc-batt-fill d-sc-batt-g" style="width:88%;"></div></div>
+                    88%
+                  </div>
+                  <span>RSSI −72 dBm</span>
+                </div>
+              </div>
+
+              <!-- Node B1 — Live Soil -->
+              <div class="d-sensor-card live">
+                <div class="d-sc-header">
+                  <div>
+                    <div class="d-sc-id">Node B1</div>
+                    <div class="d-sc-loc">Soil · Field A · Lalitpur</div>
+                  </div>
+                  <div class="d-sc-status"><div class="d-sc-dot"></div>Live · 12s ago</div>
+                </div>
+                <div class="d-sc-reading">
+                  <div class="d-sc-reading-val" style="color:#d4a017;">pH 6.2</div>
+                  <div class="d-sc-reading-label">Moisture 58% · EC 1.4 · TinyML: class 1 (91%)</div>
+                </div>
+                <div class="d-sc-meta">
+                  <div class="d-sc-battery">
+                    <div class="d-sc-batt-bar"><div class="d-sc-batt-fill d-sc-batt-g" style="width:76%;"></div></div>
+                    76%
+                  </div>
+                  <span>RSSI −68 dBm</span>
+                </div>
+              </div>
+
+              <!-- Node G3 — Fallback -->
+              <div class="d-sensor-card fallback">
+                <div class="d-sc-header">
+                  <div>
+                    <div class="d-sc-id">Node G3</div>
+                    <div class="d-sc-loc">Air · Kalanki · Street level</div>
+                  </div>
+                  <div class="d-sc-status"><div class="d-sc-dot"></div>Fallback · OpenAQ</div>
+                </div>
+                <div class="d-sc-reading">
+                  <div class="d-sc-reading-val" style="color:#d4a017;">AQI ~145</div>
+                  <div class="d-sc-reading-label">Estimated · station data · labeled on dashboard</div>
+                </div>
+                <div class="d-sc-meta">
+                  <div style="color:var(--amber2);font-size:9px;">Last live: 14m ago</div>
+                  <span style="color:var(--amber2);">Check power</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mini charts -->
+            <div class="d-charts">
+              <div class="d-chart-card">
+                <div class="d-chart-title">
+                  Node A1 — AQI 24h
+                  <span style="font-size:9px;color:var(--text3);">Live · 5s interval</span>
+                </div>
+                <svg class="d-chart-svg" viewBox="0 0 260 72" preserveAspectRatio="none">
+                  <defs><linearGradient id="ag3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c44b2b" stop-opacity=".22"/><stop offset="100%" stop-color="#c44b2b" stop-opacity="0"/></linearGradient></defs>
+                  <path d="M0,60 C30,54 50,44 80,36 C110,28 130,48 160,30 C190,12 220,20 260,10 L260,72 L0,72Z" fill="url(#ag3)"/>
+                  <path d="M0,60 C30,54 50,44 80,36 C110,28 130,48 160,30 C190,12 220,20 260,10" fill="none" stroke="#c44b2b" stroke-width="1.5"/>
+                </svg>
+                <div class="d-chart-lbls"><span>00:00</span><span>06:00</span><span>12:00</span><span>Now</span></div>
+              </div>
+              <div class="d-chart-card">
+                <div class="d-chart-title">
+                  Node B1 — pH 72h
+                  <span style="font-size:9px;color:var(--text3);">Dropping −0.6 units</span>
+                </div>
+                <svg class="d-chart-svg" viewBox="0 0 260 72" preserveAspectRatio="none">
+                  <defs><linearGradient id="pg3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#d4a017" stop-opacity=".22"/><stop offset="100%" stop-color="#d4a017" stop-opacity="0"/></linearGradient></defs>
+                  <path d="M0,10 C60,12 100,18 150,30 C200,42 230,54 260,62 L260,72 L0,72Z" fill="url(#pg3)"/>
+                  <path d="M0,10 C60,12 100,18 150,30 C200,42 230,54 260,62" fill="none" stroke="#d4a017" stroke-width="1.5"/>
+                </svg>
+                <div class="d-chart-lbls"><span>3d ago</span><span>2d ago</span><span>1d ago</span><span>Now</span></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECTION 5 — DESKTOP EXECUTIVE OVERVIEW
+═══════════════════════════════════════════════ -->
+<div class="ref-section" id="s5">
+  <div class="ref-label">DESKTOP / WARD EXECUTIVE — COMMAND OVERVIEW</div>
+  <div class="ref-note">
+    The executive overview is information-dense. Left column: advisory feed + ward board. Right column:
+    MATI summary + quick actions + deployment option selector. The deployment option selector
+    (Centerpoint Tower vs Distributed Grid) is informational for judges — shows the product's scalability thinking.
+  </div>
+  <div class="desktop-wrap" style="max-width:900px;">
+    <div class="desktop-label">WARD EXECUTIVE · OVERVIEW DASHBOARD</div>
+    <div class="desktop">
+      <div class="desktop-bar">
+        <div class="db-dot" style="background:#ff5f56;"></div>
+        <div class="db-dot" style="background:#ffbd2e;"></div>
+        <div class="db-dot" style="background:#27c93f;"></div>
+        <span style="font-size:11px;color:#444;margin-left:8px;">vayu-mitti.vercel.app/dashboard</span>
+      </div>
+      <div class="d-shell">
+        <div class="d-sidebar">
+          <div class="d-logo">
+            <div class="d-logo-mark">Vāyu<em>Mitti</em></div>
+            <div class="d-logo-sub">Ward Executive</div>
+          </div>
+          <div class="d-nav-group">Monitor</div>
+          <div class="d-nav-item on">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            Overview
+          </div>
+          <div class="d-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><path d="M10.4 13.6l-3.8 3.8M13.6 10.4l3.8-3.8"/></svg>
+            Sensor Grid
+          </div>
+          <div class="d-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h.01M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+            Live Map
+          </div>
+          <div class="d-nav-group">Insights</div>
+          <div class="d-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            Analytics
+          </div>
+          <div class="d-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            Alerts
+            <span class="d-nav-badge">3</span>
+          </div>
+          <div class="d-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Gov. PDF
+          </div>
+          <div class="d-status"><div class="d-dot"></div>All systems nominal</div>
+        </div>
+
+        <div class="d-main">
+          <div class="d-topbar">
+            <div>
+              <div class="d-topbar-title">Ward 11 — Command Overview</div>
+              <div class="d-topbar-sub">8 May 2026 · MATI last triggered 13:47 · 3 advisories sent</div>
+            </div>
+            <div class="d-topbar-r">
+              <div class="d-pill danger">AQI 167 — Unhealthy</div>
+              <div class="d-pill warn">pH Dropping</div>
+            </div>
+          </div>
+
+          <div class="d-content">
+            <div style="display:grid;grid-template-columns:1fr 270px;gap:12px;">
+
+              <!-- Left column -->
+              <div>
+                <!-- Advisory feed -->
+                <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;">Today's Advisories</div>
+                <div class="d-adv-list" style="margin-bottom:12px;">
+                  <div class="d-adv-item">
+                    <div class="d-adv-ic d-adv-ic-r">🏫</div>
+                    <div class="d-adv-body">
+                      <div class="d-adv-title">3 schools notified — outdoor assembly cancelled</div>
+                      <div class="d-adv-text">AQI 167 exceeds child outdoor threshold (100). Baneshwor Primary, Shree Saraswati, New Baneshwor Secondary. Delivered via WhatsApp.</div>
+                    </div>
+                    <div class="d-adv-time">7:05</div>
+                  </div>
+                  <div class="d-adv-item">
+                    <div class="d-adv-ic d-adv-ic-a">🌾</div>
+                    <div class="d-adv-body">
+                      <div class="d-adv-title">3 farmers — delay fertilizer 48h</div>
+                      <div class="d-adv-text">pH 6.8→6.2. Acid deposition confirmed from kiln corridor NE. Advisory in Nepali sent via WhatsApp. Delivered ✓✓</div>
+                    </div>
+                    <div class="d-adv-time">7:05</div>
+                  </div>
+                  <div class="d-adv-item">
+                    <div class="d-adv-ic d-adv-ic-r">🏥</div>
+                    <div class="d-adv-body">
+                      <div class="d-adv-title">Bagmati Hospital — respiratory triage prep</div>
+                      <div class="d-adv-text">PM2.5 4.5× WHO limit. Asthma/COPD triage recommended. Pre-alert sent to duty officer.</div>
+                    </div>
+                    <div class="d-adv-time">8:30</div>
+                  </div>
+                </div>
+
+                <!-- Deployment option visual -->
+                <div style="background:var(--ink2);border:1px solid var(--border);border-radius:var(--r2);padding:13px;">
+                  <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;">Deployment Options — Sensor Architecture</div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div style="background:rgba(61,139,94,.05);border:1px solid rgba(61,139,94,.2);border-radius:var(--r);padding:10px;">
+                      <div style="font-size:11px;font-weight:600;color:var(--sage3);margin-bottom:4px;">Option A — Centerpoint Tower</div>
+                      <div style="font-family:monospace;font-size:9px;color:var(--text3);line-height:2;letter-spacing:.5px;">
+                        ┌───────────────┐<br>
+                        │               │<br>
+                        │     ★ A1      │<br>
+                        │     ★ B1      │<br>
+                        │               │<br>
+                        └───────────────┘
+                      </div>
+                      <div style="font-size:9px;color:var(--text4);margin-top:5px;">1 air + 1 soil node · Ward aggregate · Hackathon config</div>
+                    </div>
+                    <div style="background:rgba(212,160,23,.04);border:1px dashed rgba(212,160,23,.2);border-radius:var(--r);padding:10px;">
+                      <div style="font-size:11px;font-weight:600;color:var(--amber2);margin-bottom:4px;">Option B — Distributed Grid</div>
+                      <div style="font-family:monospace;font-size:9px;color:var(--text3);line-height:2;letter-spacing:.5px;">
+                        ┌───────────────┐<br>
+                        │●    ●    ●    │<br>
+                        │               │<br>
+                        │●    ●    ●    │<br>
+                        │               │<br>
+                        └───────────────┘
+                      </div>
+                      <div style="font-size:9px;color:var(--text4);margin-top:5px;">9–16 nodes · Intra-ward gradient · Scale deployment</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right column -->
+              <div style="display:flex;flex-direction:column;gap:10px;">
+
+                <!-- MATI summary -->
+                <div style="background:linear-gradient(135deg,rgba(30,64,40,.5),rgba(42,82,56,.3));border:1px solid var(--border2);border-radius:var(--r2);padding:12px;">
+                  <div style="font-size:9px;color:var(--sage3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;display:flex;align-items:center;gap:5px;"><span>◆</span> MATI Summary</div>
+                  <div style="font-size:11px;color:var(--text);line-height:1.7;"><strong style="color:var(--cream);">Acid deposition confirmed.</strong> NO₂ +2.3σ correlated with pH drop −0.6 units / 72h. Source: Bhaktapur kiln corridor, NE wind 12km/h. 3 advisories auto-sent. Confidence: 91%.</div>
+                  <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;">
+                    <span style="font-size:9px;padding:3px 7px;border-radius:999px;background:rgba(196,75,43,.08);border:1px solid rgba(196,75,43,.16);color:var(--rust2);">acid deposition</span>
+                    <span style="font-size:9px;padding:3px 7px;border-radius:999px;background:rgba(212,160,23,.08);border:1px solid rgba(212,160,23,.16);color:var(--amber2);">kiln source NE</span>
+                  </div>
+                  <div style="font-size:9px;color:var(--text4);margin-top:7px;padding-top:7px;border-top:1px solid var(--border);">Node A1 live · Node B1 live · Open-Meteo · 13:47 UTC</div>
+                </div>
+
+                <!-- Quick actions -->
+                <div style="background:var(--ink2);border:1px solid var(--border);border-radius:var(--r2);padding:12px;">
+                  <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;">Quick Actions</div>
+                  <div style="display:flex;flex-direction:column;gap:6px;">
+                    <button style="background:rgba(196,75,43,.08);border:1px solid rgba(196,75,43,.18);border-radius:var(--r);padding:8px 10px;color:var(--rust2);font-size:11px;font-family:var(--fb);cursor:pointer;text-align:left;">📢 Broadcast alert to all ward members</button>
+                    <button style="background:rgba(61,139,94,.08);border:1px solid var(--border2);border-radius:var(--r);padding:8px 10px;color:var(--sage3);font-size:11px;font-family:var(--fb);cursor:pointer;text-align:left;">🤖 Trigger MATI advisory now</button>
+                    <button style="background:rgba(45,122,154,.08);border:1px solid rgba(45,122,154,.2);border-radius:var(--r);padding:8px 10px;color:var(--sky2);font-size:11px;font-family:var(--fb);cursor:pointer;text-align:left;">📄 Generate Governance PDF</button>
+                    <button style="background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.14);border-radius:var(--r);padding:8px 10px;color:var(--amber2);font-size:11px;font-family:var(--fb);cursor:pointer;text-align:left;">⬇ Export ward data CSV</button>
+                  </div>
+                </div>
+
+                <!-- Ward board mini -->
+                <div style="background:var(--ink2);border:1px solid var(--border);border-radius:var(--r2);padding:12px;">
+                  <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;">Clean Ward Board</div>
+                  <div class="m-ward-row" style="padding:6px 0;"><div class="m-ward-rank r1" style="font-size:12px;">1</div><div class="m-ward-name" style="font-size:11px;">Ward 8<small style="font-size:8px;">AQI 89</small></div><div class="m-ward-score" style="font-size:12px;color:var(--sage3);">91</div></div>
+                  <div class="m-ward-row" style="padding:6px 0;"><div class="m-ward-rank r2" style="font-size:12px;">2</div><div class="m-ward-name" style="font-size:11px;">Ward 19<small style="font-size:8px;">AQI 78</small></div><div class="m-ward-score" style="font-size:12px;color:var(--sage3);">88</div></div>
+                  <div class="m-ward-row" style="padding:6px 0;background:rgba(212,160,23,.04);"><div class="m-ward-rank" style="font-size:12px;color:var(--amber2);">5</div><div class="m-ward-name" style="font-size:11px;">Ward 11 ★<small style="font-size:8px;color:var(--amber2);">You</small></div><div class="m-ward-score" style="font-size:12px;color:var(--amber2);">61</div></div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /ref-body -->
+
+<script>
+function rt(i, el) {
+  document.querySelectorAll('.ref-section').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.ref-tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('s' + i).classList.add('on');
+  el.classList.add('on');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>

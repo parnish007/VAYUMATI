@@ -1,0 +1,31 @@
+# Environment secrets — never commit
+.env
+.env.local
+.env.production
+.env.development
+
+# Dependencies
+node_modules/
+
+# Uploads (selfie images — ephemeral, not part of repo)
+uploads/selfies/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build artifacts
+dist/
+build/
+
+# macOS
+.DS_Store
+
+# Python cache (for mask detection script)
+__pycache__/
+*.pyc
+*.pyo
+
+# Temporary files
+tmp/
+temp/

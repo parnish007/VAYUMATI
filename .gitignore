@@ -1,0 +1,60 @@
+# Environment secrets — never commit
+.env
+.env.local
+.env.production
+.env.development
+
+# Node
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Build outputs
+build/
+dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads (runtime selfie/avatar storage — dirs kept via .gitkeep)
+vayu-backend/uploads/**
+!vayu-backend/uploads/**/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+
+# User data (recreated automatically on server start via dataInit.js)
+vayu-backend/data/*.json
+
+# ML models (large binaries — not tracked in git)
+vayu-backend/data/models/*.h5
+vayu-backend/data/models/*.keras
+vayu-backend/data/models/*.onnx
+vayu-backend/data/models/*.pkl
+vayu-backend/data/models/Xenova/
+
+# Credentials reference (local dev shortcut, never commit)
+CREDENTIALS.md
+
+# Pitch / presentation materials (separate repo)
+vayu-pitch/
+
+# Blender / 3D assets
+blender/
+
+# Firmware secrets — see vayu-firmware/node-*/config.h.example
+vayu-firmware/node-a-air/config.h
+vayu-firmware/node-b-soil/config.h
+
+# Internal AI tooling and planning docs
+docs/superpowers/
+STARTING_PROMPTS.md
+.claude/

@@ -3,6 +3,7 @@ import type {
   LeaderboardEntry, MaskSelfie, ExposureReport,
 } from "@/types";
 import type { UserRole } from "@/lib/demoContext";
+import type { CarbonLedger } from "@/lib/carbon";
 
 const NOW = () => Math.floor(Date.now() / 1000);
 
@@ -381,3 +382,74 @@ export const DEMO_WEEKLY: { day: string; aqi: number }[] = [
   { day: "Sat", aqi: 143 },
   { day: "Sun", aqi: 167 },
 ];
+
+// ─── Carbon ledger (GOLD tier — parallel to SILVER PA score) ────────────────
+// Demo-mode only. Numbers reference Verra/Gold Standard methodologies but the
+// UI MUST surface the "Provisional" disclosure wherever NPR is shown. The
+// farmer ledger is the heaviest because Mero Bari diary entries are the
+// primary surface for compost/biochar events.
+export const DEMO_CARBON_LEDGER_BY_ROLE: Record<UserRole, CarbonLedger> = {
+  farmer: {
+    user_id: "u-ram",
+    total_co2e_kg: 84.6,
+    total_npr: 292,
+    by_kind: {
+      composted:        { count: 12, co2e_kg: 21.6, npr: 74  },
+      biochar:          { count:  3, co2e_kg:  7.2, npr: 25  },
+      tree_planted:     { count:  2, co2e_kg: 42.0, npr: 145 },
+      residue_no_burn:  { count:  0, co2e_kg:  0.0, npr:  0  },
+      cookstove_switch: { count:  3, co2e_kg: 12.6, npr: 43  },
+      alt_route:        { count:  6, co2e_kg:  1.2, npr:  4  },
+    },
+    recent: [
+      { id: "c1", user_id: "u-ram", ward_id: "11", ts: NOW() -   3600, kind: "composted",    co2e_kg: 1.8, npr_value:  6, evidence_kind: "diary", evidence_ref: "d1" },
+      { id: "c2", user_id: "u-ram", ward_id: "11", ts: NOW() -  86400, kind: "biochar",      co2e_kg: 2.4, npr_value:  8, evidence_kind: "diary", evidence_ref: "d3" },
+      { id: "c3", user_id: "u-ram", ward_id: "11", ts: NOW() - 172800, kind: "tree_planted", co2e_kg:  21, npr_value: 72, evidence_kind: "diary", evidence_ref: "d5" },
+    ],
+    next_payout_kg: 100,
+    cohort_opens: "2025-12-15",
+  },
+  individual: {
+    user_id: "u-anisha",
+    total_co2e_kg: 4.8,
+    total_npr: 17,
+    by_kind: {
+      composted:        { count: 0, co2e_kg: 0,   npr:  0 },
+      biochar:          { count: 0, co2e_kg: 0,   npr:  0 },
+      tree_planted:     { count: 0, co2e_kg: 0,   npr:  0 },
+      residue_no_burn:  { count: 0, co2e_kg: 0,   npr:  0 },
+      cookstove_switch: { count: 1, co2e_kg: 4.2, npr: 14 },
+      alt_route:        { count: 3, co2e_kg: 0.6, npr:  3 },
+    },
+    recent: [
+      { id: "c1", user_id: "u-anisha", ward_id: "11", ts: NOW() -  7200, kind: "alt_route",        co2e_kg: 0.18, npr_value:  1, evidence_kind: "exposure_point", evidence_ref: "ep-3" },
+      { id: "c2", user_id: "u-anisha", ward_id: "11", ts: NOW() - 86400, kind: "cookstove_switch", co2e_kg: 4.2,  npr_value: 14, evidence_kind: "selfie",          evidence_ref: "s-1"  },
+    ],
+    next_payout_kg: 100,
+    cohort_opens: "2025-12-15",
+  },
+  executive: {
+    user_id: "u-exec",
+    total_co2e_kg: 142,
+    total_npr: 490,
+    by_kind: {
+      composted:        { count:  5, co2e_kg:   9.0, npr:  31 },
+      biochar:          { count:  2, co2e_kg:   4.8, npr:  17 },
+      tree_planted:     { count:  6, co2e_kg: 126.0, npr: 435 },
+      residue_no_burn:  { count:  0, co2e_kg:   0.0, npr:   0 },
+      cookstove_switch: { count:  0, co2e_kg:   0.0, npr:   0 },
+      alt_route:        { count: 12, co2e_kg:   2.2, npr:   8 },
+    },
+    recent: [],
+    next_payout_kg: 200,
+    cohort_opens: "2025-12-15",
+  },
+};
+
+// Ward-wide carbon stat for Dashboard strap
+export const DEMO_WARD_CARBON_TODAY = {
+  ward_id: "11",
+  co2e_kg_today: 2_340,       // 2.34 tCO₂e
+  contributors_today: 47,
+  rank_among_wards: 3,
+};

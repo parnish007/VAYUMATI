@@ -20,7 +20,7 @@ import { SoilCrossSection } from "@/components/ui/SoilCrossSection";
 import { RoleSwitcher } from "@/components/ui/RoleSwitcher";
 import { aqiColor, aqiLabel, timeAgo, cigaretteEquiv } from "@/lib/aqi";
 import { DEFAULT_WARD_ID } from "@/lib/constants";
-import { DEMO_HOURLY_AQI, DEMO_PEOPLE_COUNT, DEMO_USER_IDENTITY } from "@/lib/demoData";
+import { DEMO_HOURLY_AQI, DEMO_PEOPLE_COUNT, DEMO_USER_IDENTITY, DEMO_WARD_CARBON_TODAY } from "@/lib/demoData";
 import { useDemo, type UserRole } from "@/lib/demoContext";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 
@@ -232,6 +232,41 @@ export default function DashboardPage() {
           </div>
         )}
 
+        {/* ─── Ward Gold Carbon strap — mobile primary ─────────────────── */}
+        <div
+          className="rounded-2xl px-4 py-3 flex items-center gap-3 relative overflow-hidden"
+          style={{
+            background: "linear-gradient(135deg, rgba(240,187,42,0.10), rgba(212,160,23,0.04))",
+            border: "1px solid rgba(240,187,42,0.30)",
+          }}
+        >
+          <div
+            className="absolute -top-8 -right-8 w-24 h-24 rounded-full pointer-events-none"
+            style={{ background: "radial-gradient(circle, rgba(240,187,42,0.22), transparent 70%)" }}
+          />
+          <div className="relative w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+            style={{ background: "rgba(240,187,42,0.18)", border: "1.5px solid rgba(240,187,42,0.50)" }}>
+            <span className="text-xl">◆</span>
+          </div>
+          <div className="relative flex-1 min-w-0">
+            <p className="text-[10px] uppercase tracking-[0.6px]" style={{ color: "#f0bb2a" }}>
+              Ward {DEMO_WARD_CARBON_TODAY.ward_id} · Gold Carbon Today
+            </p>
+            <p className="font-display text-lg font-bold leading-tight" style={{ color: "#f0bb2a" }}>
+              {(DEMO_WARD_CARBON_TODAY.co2e_kg_today / 1000).toFixed(2)} tCO₂e
+              <span className="ml-2 text-[11px] font-normal" style={{ color: "#8aad96" }}>
+                · {DEMO_WARD_CARBON_TODAY.contributors_today} contributors
+              </span>
+            </p>
+          </div>
+          <div className="relative shrink-0 text-right">
+            <p className="text-[9px] uppercase tracking-[0.6px]" style={{ color: "#4d7a5e" }}>Rank</p>
+            <p className="font-display text-lg font-bold tabular-nums" style={{ color: "#f0bb2a" }}>
+              #{DEMO_WARD_CARBON_TODAY.rank_among_wards}
+            </p>
+          </div>
+        </div>
+
         {/* People Counter */}
         <PeopleCounter count={peopleCount} />
 
@@ -372,6 +407,41 @@ export default function DashboardPage() {
             )}
           </div>
         </Card>
+
+        {/* Ward Gold Carbon strap — desktop */}
+        <div
+          className="rounded-2xl px-5 py-3 flex items-center gap-4 relative overflow-hidden"
+          style={{
+            background: "linear-gradient(135deg, rgba(240,187,42,0.10), rgba(212,160,23,0.04))",
+            border: "1px solid rgba(240,187,42,0.30)",
+          }}
+        >
+          <div
+            className="absolute -top-8 -right-8 w-32 h-32 rounded-full pointer-events-none"
+            style={{ background: "radial-gradient(circle, rgba(240,187,42,0.22), transparent 70%)" }}
+          />
+          <div className="relative w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+            style={{ background: "rgba(240,187,42,0.18)", border: "1.5px solid rgba(240,187,42,0.50)" }}>
+            <span className="text-2xl">◆</span>
+          </div>
+          <div className="relative flex-1">
+            <p className="text-[10px] uppercase tracking-[0.6px]" style={{ color: "#f0bb2a" }}>
+              Ward {DEMO_WARD_CARBON_TODAY.ward_id} · Gold Carbon Today
+            </p>
+            <p className="font-display text-xl font-bold" style={{ color: "#f0bb2a" }}>
+              {(DEMO_WARD_CARBON_TODAY.co2e_kg_today / 1000).toFixed(2)} tCO₂e avoided
+              <span className="ml-2 text-xs font-normal" style={{ color: "#8aad96" }}>
+                · {DEMO_WARD_CARBON_TODAY.contributors_today} farmers + residents logged
+              </span>
+            </p>
+          </div>
+          <div className="relative shrink-0 text-right">
+            <p className="text-[10px] uppercase tracking-[0.6px]" style={{ color: "#4d7a5e" }}>Ward Rank</p>
+            <p className="font-display text-xl font-bold tabular-nums" style={{ color: "#f0bb2a" }}>
+              #{DEMO_WARD_CARBON_TODAY.rank_among_wards}
+            </p>
+          </div>
+        </div>
 
         {/* People Counter + Hourly */}
         <div className="grid grid-cols-3 gap-4">

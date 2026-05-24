@@ -20,9 +20,19 @@ import {
   DEMO_USER_IDENTITY,
   DEMO_MEMBER_RANKING,
   DEMO_ACTIVITY_FEED,
+  DEMO_CARBON_LEDGER_BY_ROLE,
   type ActivityEntry,
   type ActivityKind,
 } from "@/lib/demoData";
+import {
+  CARBON_META,
+  PROVISIONAL_DISCLOSURE,
+  carbonTier,
+  nextCarbonTier,
+  diaryTypeToCarbon,
+  kindToCo2eKg,
+  kindToNpr,
+} from "@/lib/carbon";
 import type { UserRole } from "@/lib/demoContext";
 import type { MaskSelfie, LeaderboardEntry } from "@/types";
 
@@ -1166,13 +1176,16 @@ function CommunityScoreTab({ isDemo, paData }: { isDemo: boolean; paData?: PARes
 
 // ─── Mero Bari ──────────────────────────────────────────────────────────────────
 
-const DIARY_TYPE_META: Record<string, { icon: string; label: string; color: string }> = {
+const DIARY_TYPE_META: Record<string, { icon: string; label: string; color: string; carbonKind?: "composted" | "biochar" }> = {
   watered:     { icon: "💧", label: "Watered",      color: "#2d7a9a" },
   fertilized:  { icon: "🌾", label: "Fertilized",   color: "#d4a017" },
   soil_checked:{ icon: "🔬", label: "Checked Soil", color: "#4fa870" },
-  harvest:     { icon: "🌿", label: "Harvested",     color: "#7dc99a" },
-  problem:     { icon: "⚠️", label: "Problem",       color: "#c44b2b" },
-  other:       { icon: "✏️", label: "Other",          color: "#7b2d8b" },
+  harvest:     { icon: "🌿", label: "Harvested",    color: "#7dc99a" },
+  // Carbon-bearing types — earn BOTH silver PA AND gold carbon credit
+  composted:   { icon: "♻️", label: "Composted",    color: "#f0bb2a", carbonKind: "composted" },
+  biochar:     { icon: "🔥", label: "Biochar",      color: "#e8600a", carbonKind: "biochar" },
+  problem:     { icon: "⚠️", label: "Problem",      color: "#c44b2b" },
+  other:       { icon: "✏️", label: "Other",        color: "#7b2d8b" },
 };
 
 interface DiaryEntry {
@@ -1224,6 +1237,24 @@ function MeroBariTab({
   const [paToast, setPaToast] = useState<string | null>(null);
   const [localEntries, setLocalEntries] = useState<DiaryEntry[]>([]);
 
+  // Gold-tier carbon ledger for this user (role-keyed in demo mode)
+  const roleKey: UserRole = (["individual","farmer","executive"] as UserRole[]).includes(userRole as UserRole)
+    ? (userRole as UserRole)
+    : "farmer";
+  const [carbonLedger, setCarbonLedger] = useState(() => ({
+    ...DEMO_CARBON_LEDGER_BY_ROLE[roleKey],
+    by_kind: { ...DEMO_CARBON_LEDGER_BY_ROLE[roleKey].by_kind },
+  }));
+  useEffect(() => {
+    setCarbonLedger({
+      ...DEMO_CARBON_LEDGER_BY_ROLE[roleKey],
+      by_kind: { ...DEMO_CARBON_LEDGER_BY_ROLE[roleKey].by_kind },
+    });
+  }, [roleKey]);
+  const tier = carbonTier(carbonLedger.total_co2e_kg);
+  const next = nextCarbonTier(carbonLedger.total_co2e_kg);
+  const payoutPct = Math.min(100, Math.round((carbonLedger.total_co2e_kg / carbonLedger.next_payout_kg) * 100));
+
   const { data: remoteEntries, mutate: mutateDiary } = useSWR<DiaryEntry[]>(
     isDemo ? null : `${getBackendUrl()}/api/community/diary?ward_id=${wardId}`,
     async (url: string) => {
@@ -1268,7 +1299,27 @@ function MeroBariTab({
           ts:         Math.floor(Date.now() / 1000),
         };
         setLocalEntries((prev) => [newEntry, ...prev]);
-        if (selectedType !== "fertilized") {
+        // Award PA + (when applicable) gold carbon credit. Two parallel ladders.
+        const carbonKind = diaryTypeToCarbon(selectedType);
+        if (carbonKind) {
+          const kg = kindToCo2eKg(carbonKind);
+          const npr = kindToNpr(carbonKind);
+          setCarbonLedger((prev) => ({
+            ...prev,
+            total_co2e_kg: Math.round((prev.total_co2e_kg + kg) * 10) / 10,
+            total_npr:     prev.total_npr + npr,
+            by_kind: {
+              ...prev.by_kind,
+              [carbonKind]: {
+                count:   prev.by_kind[carbonKind].count + 1,
+                co2e_kg: Math.round((prev.by_kind[carbonKind].co2e_kg + kg) * 10) / 10,
+                npr:     prev.by_kind[carbonKind].npr + npr,
+              },
+            },
+          }));
+          setPaToast(`+20 silver · +${kg.toFixed(1)} kg gold · रू ${npr}`);
+          setTimeout(() => setPaToast(null), 3200);
+        } else if (selectedType !== "fertilized") {
           setPaToast("+20 PA · soil compliance");
           setTimeout(() => setPaToast(null), 2500);
         }
@@ -1290,7 +1341,13 @@ function MeroBariTab({
         if (r.ok) {
           const saved = (await r.json()) as DiaryEntry;
           setLocalEntries((prev) => [saved, ...prev]);
-          if (selectedType !== "fertilized") {
+          const carbonKind = diaryTypeToCarbon(selectedType);
+          if (carbonKind) {
+            const kg = kindToCo2eKg(carbonKind);
+            const npr = kindToNpr(carbonKind);
+            setPaToast(`+20 silver · +${kg.toFixed(1)} kg gold · रू ${npr}`);
+            setTimeout(() => setPaToast(null), 3200);
+          } else if (selectedType !== "fertilized") {
             setPaToast("+20 PA · soil compliance");
             setTimeout(() => setPaToast(null), 2500);
           }
@@ -1329,8 +1386,116 @@ function MeroBariTab({
           </span>
         </div>
         <p className="text-[11px]" style={{ color: "#4d7a5e" }}>
-          Log soil & crop activities. Earns PA points for responsible practice.
+          Log soil & crop activities. Earns silver PA + gold carbon credit.
         </p>
+      </div>
+
+      {/* ─── GOLD CARBON LEDGER — parallel to silver PA, visually heavier ─── */}
+      <div
+        className="rounded-2xl overflow-hidden relative"
+        style={{
+          background: "linear-gradient(135deg, rgba(240,187,42,0.10), rgba(212,160,23,0.04))",
+          border: `1px solid ${tier.color}55`,
+          boxShadow: `0 0 24px ${tier.color}18`,
+        }}
+      >
+        {/* Subtle gold sheen */}
+        <div
+          className="absolute -top-12 -right-12 w-32 h-32 rounded-full pointer-events-none"
+          style={{ background: `radial-gradient(circle, ${tier.color}30, transparent 70%)` }}
+        />
+
+        <div className="relative px-4 pt-4 pb-3 flex items-start gap-3">
+          <div
+            className="shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
+            style={{ background: tier.bg, border: `1.5px solid ${tier.color}66` }}
+          >
+            {tier.icon}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <span
+                className="text-[9px] font-bold uppercase tracking-[1px] px-1.5 py-0.5 rounded"
+                style={{ background: `${tier.color}22`, color: tier.color }}
+              >
+                Gold · {tier.label}
+              </span>
+              <span className="text-[10px]" style={{ color: "#8aad96" }}>
+                Bari Carbon Ledger
+              </span>
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <span
+                className="font-display font-black tabular-nums leading-none"
+                style={{ fontSize: 32, color: tier.color }}
+              >
+                {carbonLedger.total_co2e_kg.toFixed(1)}
+              </span>
+              <span className="text-xs font-semibold" style={{ color: "#8aad96" }}>kg CO₂e</span>
+              <span className="ml-auto text-[11px] font-bold tabular-nums" style={{ color: "#f0bb2a" }}>
+                ≈ रू {carbonLedger.total_npr}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Progress to next payout */}
+        <div className="relative px-4 pb-3">
+          <div className="flex items-center justify-between text-[10px] mb-1">
+            <span style={{ color: "#8aad96" }}>
+              Next payout · {carbonLedger.next_payout_kg} kg
+            </span>
+            <span className="tabular-nums font-semibold" style={{ color: tier.color }}>
+              {payoutPct}%
+            </span>
+          </div>
+          <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(0,0,0,0.35)" }}>
+            <div
+              className="h-full rounded-full transition-all duration-700"
+              style={{
+                width: `${payoutPct}%`,
+                background: `linear-gradient(90deg, ${tier.color}, #f0bb2a)`,
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Provisional disclosure + MRV evidence ribbon */}
+        <div
+          className="relative px-4 py-2 flex items-center gap-2 flex-wrap"
+          style={{
+            background: "rgba(0,0,0,0.20)",
+            borderTop: "1px solid rgba(240,187,42,0.15)",
+          }}
+        >
+          <span className="text-[9px] font-semibold uppercase tracking-[0.6px]" style={{ color: "#d4a017" }}>
+            🔒 {PROVISIONAL_DISCLOSURE}
+          </span>
+          <span className="ml-auto text-[9px]" style={{ color: "#4d7a5e" }}>
+            MRV: {carbonLedger.by_kind.composted.count + carbonLedger.by_kind.biochar.count} diary · Node B (pH/EC)
+          </span>
+        </div>
+
+        {/* Mini stat row */}
+        <div className="relative px-4 py-2.5 grid grid-cols-3 gap-2" style={{ borderTop: "1px solid rgba(61,139,94,0.10)" }}>
+          {([
+            { k: "composted",    label: "Compost",  icon: "♻️" },
+            { k: "biochar",      label: "Biochar",  icon: "🔥" },
+            { k: "tree_planted", label: "Trees",    icon: "🌳" },
+          ] as const).map(({ k, label, icon }) => {
+            const s = carbonLedger.by_kind[k];
+            return (
+              <div key={k} className="flex flex-col">
+                <span className="text-[9px] uppercase tracking-[0.5px]" style={{ color: "#4d7a5e" }}>
+                  {icon} {label}
+                </span>
+                <span className="text-sm font-bold tabular-nums" style={{ color: "#f0bb2a" }}>
+                  {s.count}<span className="text-[10px] font-normal ml-1" style={{ color: "#8aad96" }}>× {s.co2e_kg.toFixed(1)}kg</span>
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Quick-tap log form */}
@@ -1440,9 +1605,17 @@ function MeroBariTab({
 
             <div className="flex items-center justify-between gap-3">
               <span className="text-[10px]" style={{ color: "#2d5040" }}>
-                {selectedType !== "fertilized"
-                  ? "✓ Earns +20 PA (soil compliance)"
-                  : "No PA for fertilizer entries"}
+                {(() => {
+                  const ck = selectedType ? diaryTypeToCarbon(selectedType) : null;
+                  if (ck) {
+                    const kg = kindToCo2eKg(ck);
+                    const npr = kindToNpr(ck);
+                    return `+20 silver · +${kg.toFixed(1)} kg gold · रू ${npr}`;
+                  }
+                  return selectedType !== "fertilized"
+                    ? "✓ Earns +20 PA (soil compliance)"
+                    : "No PA for fertilizer entries";
+                })()}
               </span>
               <button
                 onClick={handleSubmit}
@@ -1565,6 +1738,23 @@ function MeroBariTab({
                             +20 PA
                           </span>
                         )}
+                        {(() => {
+                          const ck = diaryTypeToCarbon(e.entry_type);
+                          if (!ck) return null;
+                          const kg = kindToCo2eKg(ck);
+                          return (
+                            <span
+                              className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
+                              style={{
+                                background: "rgba(240,187,42,0.12)",
+                                color: "#f0bb2a",
+                                border: "1px solid rgba(240,187,42,0.35)",
+                              }}
+                            >
+                              ⚡ {kg.toFixed(1)}kg gold
+                            </span>
+                          );
+                        })()}
                       </div>
                       {e.note && (
                         <p className="text-[12px] leading-relaxed" style={{ color: "#8aad96" }}>

@@ -321,72 +321,94 @@ export default function ExposurePage() {
           )}
         </div>
 
-        {/* Floating top bar */}
-        <div className="absolute top-0 inset-x-0 z-[400] flex items-start justify-between p-3 pointer-events-none">
-          {/* Left — identity + view switcher */}
-          <div
-            className="rounded-xl px-3 py-2 pointer-events-auto"
-            style={{
-              background: "rgba(8,15,10,0.82)",
-              border: "1px solid rgba(61,139,94,0.22)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-            }}
-          >
-            {/* View tab pills */}
-            <div className="flex gap-1 mb-1.5">
-              {(["route", "pulse"] as View[]).map((v) => (
-                <button
-                  key={v}
-                  onClick={() => setView(v)}
-                  className="px-2.5 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-[0.5px] transition-all"
-                  style={
-                    view === v
-                      ? { background: "rgba(79,168,112,0.22)", color: "#7dc99a", border: "1px solid rgba(79,168,112,0.40)" }
-                      : { background: "transparent", color: "#3d6650", border: "1px solid transparent" }
-                  }
-                >
-                  {v === "route" ? "My Route" : "Ward Pulse"}
-                </button>
-              ))}
-            </div>
-            <p className="text-[9px] uppercase tracking-[0.7px]" style={{ color: "#5a8a6e" }}>
-              {view === "route" ? "Personal exposure" : "24h AQI aura replay"}
-            </p>
-            <p className="text-sm font-semibold text-parchment leading-tight mt-0.5">
-              {view === "route" ? (isDemo ? identity.firstName : "You") : `Ward ${WARD_ID}`}
-              <span className="ml-1.5 font-normal text-[11px]" style={{ color: "#8aad96" }}>
-                · {new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
-              </span>
-            </p>
-          </div>
-
-          {/* Right — live AQI (route) or LIVE badge (pulse) */}
-          {view === "route" ? (
+        {/* ═══ PRIMARY VIEW CONTROL — full-width segmented bar (44px tap target) ═══
+            Replaces the previously buried text-[9px] pills. This is now the
+            focal point of the page chrome; identity strip is a small subtitle
+            below the toggle. */}
+        <div
+          className="absolute top-2 left-2 right-2 z-[400] pointer-events-none"
+        >
+          <div className="flex items-start gap-2">
             <div
-              className="rounded-xl px-3 py-2 pointer-events-auto flex items-center gap-2.5"
+              className="flex-1 rounded-2xl overflow-hidden pointer-events-auto"
               style={{
-                background: "rgba(8,15,10,0.78)",
-                border: `1px solid ${currentColor}66`,
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
+                background: "rgba(8,15,10,0.92)",
+                border: "1px solid rgba(61,139,94,0.30)",
+                backdropFilter: "blur(14px)",
+                WebkitBackdropFilter: "blur(14px)",
+                boxShadow: "0 4px 18px rgba(0,0,0,0.35)",
               }}
             >
-              <span className="w-2 h-2 rounded-full shrink-0" style={{ background: currentColor, animation: "pulse-dot 1.6s infinite" }} />
-              <div className="text-right">
-                <p className="font-display text-base font-bold leading-none tabular-nums" style={{ color: currentColor }}>{currentAqi}</p>
-                <p className="text-[9px] leading-none mt-0.5" style={{ color: "#8aad96" }}>Ward {WARD_ID} · {aqiLabelShort(currentAqi)}</p>
+              {/* Segmented control row — generous tap targets */}
+              <div className="flex gap-1 p-1" style={{ borderBottom: "1px solid rgba(61,139,94,0.16)" }}>
+                {(["route", "pulse"] as View[]).map((v) => (
+                  <button
+                    key={v}
+                    onClick={() => setView(v)}
+                    className="flex-1 rounded-xl text-[11px] font-bold uppercase tracking-[0.6px] transition-all flex items-center justify-center gap-1.5"
+                    style={{
+                      minHeight: 36,
+                      ...(view === v
+                        ? {
+                            background: "rgba(79,168,112,0.22)",
+                            color: "#7dc99a",
+                            border: "1px solid rgba(79,168,112,0.55)",
+                            boxShadow: "0 0 10px rgba(79,168,112,0.25)",
+                          }
+                        : {
+                            background: "rgba(255,255,255,0.02)",
+                            color: "#5a8a6e",
+                            border: "1px solid rgba(61,139,94,0.10)",
+                          }),
+                    }}
+                  >
+                    <span className="text-sm leading-none">{v === "route" ? "🛤️" : "🌫"}</span>
+                    <span>{v === "route" ? "My Route" : "Ward Pulse"}</span>
+                  </button>
+                ))}
+              </div>
+              {/* Identity strip — now subtitle, not headline */}
+              <div className="px-3 py-1.5">
+                <p className="text-[10px] uppercase tracking-[0.7px]" style={{ color: "#5a8a6e" }}>
+                  {view === "route" ? "Personal exposure" : "24h AQI aura replay"}
+                </p>
+                <p className="text-xs font-semibold text-parchment leading-tight">
+                  {view === "route" ? (isDemo ? identity.firstName : "You") : `Ward ${WARD_ID}`}
+                  <span className="ml-1.5 font-normal text-[10px]" style={{ color: "#8aad96" }}>
+                    · {new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+                  </span>
+                </p>
               </div>
             </div>
-          ) : isLive ? (
-            <div
-              className="rounded-xl px-3 py-2 pointer-events-auto flex items-center gap-2"
-              style={{ background: "rgba(8,15,10,0.82)", border: "1px solid rgba(79,168,112,0.35)", backdropFilter: "blur(12px)" }}
-            >
-              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#4fa870", animation: "pulse-dot 1.6s infinite", display: "inline-block" }} />
-              <span style={{ fontSize: 10, color: "#7dc99a", fontWeight: 700 }}>LIVE</span>
-            </div>
-          ) : null}
+
+            {/* Right — live AQI (route) or LIVE badge (pulse) — stays compact */}
+            {view === "route" ? (
+              <div
+                className="rounded-2xl px-3 py-2.5 pointer-events-auto flex items-center gap-2 shrink-0"
+                style={{
+                  background: "rgba(8,15,10,0.92)",
+                  border: `1px solid ${currentColor}66`,
+                  backdropFilter: "blur(14px)",
+                  WebkitBackdropFilter: "blur(14px)",
+                  boxShadow: "0 4px 18px rgba(0,0,0,0.35)",
+                }}
+              >
+                <span className="w-2 h-2 rounded-full shrink-0" style={{ background: currentColor, animation: "pulse-dot 1.6s infinite" }} />
+                <div className="text-right">
+                  <p className="font-display text-base font-bold leading-none tabular-nums" style={{ color: currentColor }}>{currentAqi}</p>
+                  <p className="text-[9px] leading-none mt-0.5" style={{ color: "#8aad96" }}>{aqiLabelShort(currentAqi)}</p>
+                </div>
+              </div>
+            ) : isLive ? (
+              <div
+                className="rounded-2xl px-3 py-2.5 pointer-events-auto flex items-center gap-2 shrink-0"
+                style={{ background: "rgba(8,15,10,0.92)", border: "1px solid rgba(79,168,112,0.40)", backdropFilter: "blur(14px)", boxShadow: "0 4px 18px rgba(0,0,0,0.35)" }}
+              >
+                <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#4fa870", animation: "pulse-dot 1.6s infinite", display: "inline-block" }} />
+                <span style={{ fontSize: 10, color: "#7dc99a", fontWeight: 700 }}>LIVE</span>
+              </div>
+            ) : null}
+          </div>
         </div>
 
         {/* AQI scale legend — route view only */}

@@ -182,14 +182,11 @@ export default function ExposurePage() {
   const selectedPoint = selectedIdx != null ? mapPoints[selectedIdx] : null;
 
   return (
-    // Full-bleed map as background layer; stats sheet floats on top (mobile).
-    // On desktop: standard flex-row side-by-side layout.
-    <div className="-mx-4 -my-4 relative overflow-hidden h-[calc(100dvh-104px)]
-                   md:mx-0 md:my-0 md:static md:overflow-visible md:h-auto
-                   md:flex md:flex-row md:gap-4 md:items-start animate-fade-up">
+    <div className="-mx-4 -my-4 md:mx-0 md:my-0 flex flex-col md:flex-row md:gap-4 md:items-start animate-fade-up">
 
-      {/* ══ MAP — absolute background on mobile, flex-1 on desktop ═════════ */}
-      <div className="absolute inset-0 md:relative md:flex-1 md:rounded-2xl md:overflow-hidden">
+      {/* ══ MAP ══════════════════════════════════════════════════════════════ */}
+      <div className="relative w-full md:flex-1 md:rounded-2xl md:overflow-hidden"
+        style={{ minHeight: "56vh" }}>
         <div className="absolute inset-0">
           {mapPoints.length > 0 ? (
             <ExposureMap
@@ -315,37 +312,51 @@ export default function ExposurePage() {
           </button>
         )}
 
-        {/* Deep vignette — map fades into the sheet below */}
+        {/* Gradient bleed — map colour flows into the fingerprint strip below */}
         <div
           className="absolute bottom-0 inset-x-0 pointer-events-none z-[350] md:hidden"
-          style={{ height: "60%", background: "linear-gradient(to bottom, transparent 0%, rgba(3,8,5,0.72) 48%, rgba(3,8,5,0.97) 100%)" }}
+          style={{ height: "38%", background: "linear-gradient(to bottom, transparent 0%, #030e07 100%)" }}
         />
       </div>
 
-      {/* ══ STATS SHEET — glass overlay on mobile, sidebar on desktop ════════
-           The "layering" the user asked for: content floats over the map,
-           identical to how Google Maps / Uber show route info over the map.   */}
-      <div className="absolute bottom-0 inset-x-0 z-[400] md:relative md:w-[340px] md:shrink-0">
+      {/* ══ AQI JOURNEY STRIP — CSS bars, mobile only ══════════════════════
+           Shows the AQI reading at each route waypoint as coloured bars.
+           Sits between the map and stats so data flows continuously.         */}
+      {mapPoints.length > 0 && (() => {
+        const peak2 = mapPoints.reduce((a, b) => b.aqi > a.aqi ? b : a, mapPoints[0]);
+        return (
+          <div className="md:hidden w-full flex flex-col" style={{ background: "#030e07" }}>
+            <div className="flex items-center justify-between px-4 pt-2 pb-0.5">
+              <span className="text-[9px] uppercase tracking-[1.2px]" style={{ color: "#1e3828", fontVariantNumeric: "tabular-nums" }}>
+                Route · {mapPoints.length} pts
+              </span>
+              <span className="text-[9px] tabular-nums" style={{ color: aqiColor(peak2.aqi) }}>
+                peak {peak2.aqi}
+              </span>
+            </div>
+            <div className="flex items-end gap-px h-9 px-1 pb-1">
+              {mapPoints.map((p, i) => {
+                const pct = Math.max(18, Math.round((p.aqi / 500) * 100));
+                return (
+                  <div
+                    key={i}
+                    className="flex-1"
+                    style={{
+                      height: `${pct}%`,
+                      background: aqiColor(p.aqi),
+                      borderRadius: "1px 1px 0 0",
+                      opacity: 0.82,
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        );
+      })()}
 
-        {/* Glass panel background — mobile only */}
-        <div
-          className="absolute inset-0 rounded-t-[1.5rem] md:hidden pointer-events-none"
-          style={{
-            background: "rgba(3,8,5,0.93)",
-            backdropFilter: "blur(24px)",
-            WebkitBackdropFilter: "blur(24px)",
-            borderTop: "1px solid rgba(61,139,94,0.18)",
-          }}
-        />
-
-        {/* Drag handle (mobile) */}
-        <div className="md:hidden relative z-10 flex justify-center pt-2.5">
-          <div className="w-9 h-[3px] rounded-full" style={{ background: "rgba(200,217,204,0.18)" }} />
-        </div>
-
-        {/* Scrollable content */}
-        <div className="relative z-10 max-h-[62vh] overflow-y-auto md:max-h-none md:overflow-visible
-                       flex flex-col gap-3 px-4 pb-4 pt-2 md:px-0 md:py-0">
+      {/* ══ STATS PANEL ═════════════════════════════════════════════════════ */}
+      <div className="w-full md:w-[340px] md:shrink-0 flex flex-col gap-3 px-4 py-4 md:px-0 md:py-0">
 
         {/* Hero card: dose + cigarettes */}
         <div
@@ -506,7 +517,6 @@ export default function ExposurePage() {
             <WeeklyChart days={DEMO_WEEKLY} />
           </Card>
         )}
-        </div>
       </div>
     </div>
   );

@@ -182,12 +182,14 @@ export default function ExposurePage() {
   const selectedPoint = selectedIdx != null ? mapPoints[selectedIdx] : null;
 
   return (
-    // Break out of the layout's px-4 py-4 padding for a full-bleed canvas.
-    <div className="-mx-4 -my-4 md:mx-0 md:my-0 flex flex-col md:flex-row md:gap-4 md:items-start animate-fade-up">
+    // Full-bleed map as background layer; stats sheet floats on top (mobile).
+    // On desktop: standard flex-row side-by-side layout.
+    <div className="-mx-4 -my-4 relative overflow-hidden h-[calc(100dvh-104px)]
+                   md:mx-0 md:my-0 md:static md:overflow-visible md:h-auto
+                   md:flex md:flex-row md:gap-4 md:items-start animate-fade-up">
 
-      {/* ══ MAP CANVAS (left / top) ═════════════════════════════════════════ */}
-      <div className="relative w-full md:flex-1 md:rounded-2xl md:overflow-hidden"
-        style={{ minHeight: "55vh" }}>
+      {/* ══ MAP — absolute background on mobile, flex-1 on desktop ═════════ */}
+      <div className="absolute inset-0 md:relative md:flex-1 md:rounded-2xl md:overflow-hidden">
         <div className="absolute inset-0">
           {mapPoints.length > 0 ? (
             <ExposureMap
@@ -313,18 +315,37 @@ export default function ExposurePage() {
           </button>
         )}
 
-        {/* Gradient morph — bleeds map color into the fingerprint strip below */}
+        {/* Deep vignette — map fades into the sheet below */}
         <div
           className="absolute bottom-0 inset-x-0 pointer-events-none z-[350] md:hidden"
-          style={{ height: "38%", background: "linear-gradient(to bottom, transparent 0%, #030e07 100%)" }}
+          style={{ height: "60%", background: "linear-gradient(to bottom, transparent 0%, rgba(3,8,5,0.72) 48%, rgba(3,8,5,0.97) 100%)" }}
         />
       </div>
 
-      {/* ══ ROUTE FINGERPRINT — mobile seismograph strip ════════════════════ */}
-      <RouteFingerprint points={mapPoints} peak={peak} />
+      {/* ══ STATS SHEET — glass overlay on mobile, sidebar on desktop ════════
+           The "layering" the user asked for: content floats over the map,
+           identical to how Google Maps / Uber show route info over the map.   */}
+      <div className="absolute bottom-0 inset-x-0 z-[400] md:relative md:w-[340px] md:shrink-0">
 
-      {/* ══ STATS PANEL (right / bottom) ═════════════════════════════════════ */}
-      <div className="w-full md:w-[340px] md:shrink-0 flex flex-col gap-3 px-4 py-4 md:px-0 md:py-0">
+        {/* Glass panel background — mobile only */}
+        <div
+          className="absolute inset-0 rounded-t-[1.5rem] md:hidden pointer-events-none"
+          style={{
+            background: "rgba(3,8,5,0.93)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            borderTop: "1px solid rgba(61,139,94,0.18)",
+          }}
+        />
+
+        {/* Drag handle (mobile) */}
+        <div className="md:hidden relative z-10 flex justify-center pt-2.5">
+          <div className="w-9 h-[3px] rounded-full" style={{ background: "rgba(200,217,204,0.18)" }} />
+        </div>
+
+        {/* Scrollable content */}
+        <div className="relative z-10 max-h-[62vh] overflow-y-auto md:max-h-none md:overflow-visible
+                       flex flex-col gap-3 px-4 pb-4 pt-2 md:px-0 md:py-0">
 
         {/* Hero card: dose + cigarettes */}
         <div
@@ -485,124 +506,11 @@ export default function ExposurePage() {
             <WeeklyChart days={DEMO_WEEKLY} />
           </Card>
         )}
+        </div>
       </div>
     </div>
   );
 }
-
-// ─── Route AQI Fingerprint ────────────────────────────────────────────────────
-// Seismograph-style SVG bar chart — mobile only, sits between map and stats.
-// Each mapPoint becomes a vertical bar; height ∝ AQI; color = aqiColor(aqi).
-function RouteFingerprint({
-  points,
-  peak,
-}: {
-  points: ExposurePoint[];
-  peak: { startTs: number; endTs: number; aqi: number } | null;
-}) {
-  if (points.length === 0) return null;
-
-  const W = 1000;
-  const H = 68;
-  const maxBarH = H - 14;
-  const barSpacing = W / points.length;
-  const barW = Math.max(2, barSpacing - 1.5);
-
-  const peakPoint = points.reduce((a, b) => (b.aqi > a.aqi ? b : a), points[0]);
-  const peakIdx = points.indexOf(peakPoint);
-
-  // Smooth area fill path through bar tops
-  let areaPath = `M 0 ${H}`;
-  points.forEach((p, i) => {
-    const cx = i * barSpacing + barSpacing / 2;
-    const barH = Math.max(4, (p.aqi / 500) * maxBarH);
-    areaPath += ` L ${cx} ${H - barH}`;
-  });
-  areaPath += ` L ${W} ${H} Z`;
-
-  const peakCX = peakIdx * barSpacing + barSpacing / 2;
-  const peakBarH = Math.max(4, (peakPoint.aqi / 500) * maxBarH);
-  const peakTop = H - peakBarH;
-  const peakColor = aqiColor(peakPoint.aqi);
-
-  return (
-    <div
-      className="md:hidden w-full relative flex flex-col"
-      style={{ background: "#030e07", marginTop: -1 }}
-    >
-      {/* Top separator */}
-      <div
-        className="absolute top-0 inset-x-0 h-px pointer-events-none"
-        style={{ background: "linear-gradient(to right, transparent, rgba(61,139,94,0.25), transparent)" }}
-      />
-      {/* Labels row */}
-      <div className="flex items-center justify-between px-4 pt-2.5 pb-0.5">
-        <span
-          className="text-[8px] uppercase tracking-[1px] font-mono"
-          style={{ color: "#2a4a38" }}
-        >
-          ROUTE AQI FINGERPRINT · {points.length} READINGS
-        </span>
-        <span
-          className="text-[9px] font-mono tabular-nums font-semibold"
-          style={{ color: peakColor }}
-        >
-          peak {peakPoint.aqi}
-        </span>
-      </div>
-      {/* SVG fingerprint */}
-      <svg
-        viewBox={`0 0 ${W} ${H}`}
-        preserveAspectRatio="none"
-        width="100%"
-        height={54}
-        style={{ display: "block" }}
-      >
-        <defs>
-          <linearGradient id="fp-area-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={peakColor} stopOpacity="0.22" />
-            <stop offset="100%" stopColor={peakColor} stopOpacity="0.01" />
-          </linearGradient>
-        </defs>
-        {/* Area fill */}
-        <path d={areaPath} fill="url(#fp-area-fill)" />
-        {/* Bars */}
-        {points.map((p, i) => {
-          const bx = i * barSpacing + 0.75;
-          const barH = Math.max(4, (p.aqi / 500) * maxBarH);
-          return (
-            <rect
-              key={i}
-              x={bx}
-              y={H - barH}
-              width={barW}
-              height={barH}
-              rx={1}
-              fill={aqiColor(p.aqi)}
-              opacity={i === peakIdx ? 1 : 0.68}
-            />
-          );
-        })}
-        {/* Peak dashed connector + dot */}
-        <line
-          x1={peakCX} y1={peakTop - 6}
-          x2={peakCX} y2={3}
-          stroke={peakColor}
-          strokeWidth={1.5}
-          strokeDasharray="4 3"
-          opacity={0.75}
-        />
-        <circle cx={peakCX} cy={peakTop - 6} r={2.5} fill={peakColor} opacity={0.9} />
-      </svg>
-      {/* Bottom separator */}
-      <div
-        className="absolute bottom-0 inset-x-0 h-px pointer-events-none"
-        style={{ background: "linear-gradient(to right, transparent, rgba(61,139,94,0.12), transparent)" }}
-      />
-    </div>
-  );
-}
-
 function StatTile({
   icon, label, value, unit, color,
 }: {

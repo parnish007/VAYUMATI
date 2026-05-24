@@ -1,12 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAir } from "@/hooks/useAir";
 import { aqiColor } from "@/lib/aqi";
 import { DEFAULT_WARD_ID } from "@/lib/constants";
 import { DemoToggle } from "@/components/ui/DemoToggle";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { useAuth } from "@/lib/authContext";
+
+// Fullscreen is a user-triggered gesture — cannot call requestFullscreen outside a click handler
+function useFullscreen() {
+  const [isFs, setIsFs] = useState(false);
+  useEffect(() => {
+    const h = () => setIsFs(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", h);
+    return () => document.removeEventListener("fullscreenchange", h);
+  }, []);
+  const toggle = useCallback(() => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.().catch(() => null);
+    } else {
+      document.exitFullscreen?.().catch(() => null);
+    }
+  }, []);
+  return { isFs, toggle };
+}
 
 interface TopBarProps {
   wardId?: string;
@@ -17,6 +35,7 @@ export function TopBar({ wardId = DEFAULT_WARD_ID }: TopBarProps) {
   const { name, isDemo } = useCurrentUser();
   const { logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { isFs, toggle: toggleFs } = useFullscreen();
 
   return (
     <header
@@ -35,6 +54,24 @@ export function TopBar({ wardId = DEFAULT_WARD_ID }: TopBarProps) {
       <div className="flex items-center gap-2">
         {/* Show demo toggle only in demo mode */}
         {isDemo && <DemoToggle compact />}
+
+        {/* Fullscreen toggle — makes the app feel native on mobile Chrome */}
+        <button
+          onClick={toggleFs}
+          className="w-7 h-7 flex items-center justify-center rounded-lg transition-opacity hover:opacity-70"
+          style={{ color: "rgba(200,217,204,0.45)" }}
+          aria-label={isFs ? "Exit fullscreen" : "Enter fullscreen"}
+        >
+          {isFs ? (
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" className="w-4 h-4">
+              <path d="M7 3H3v4M17 3h-4v4M7 17H3v-4M17 17h-4v-4"/>
+            </svg>
+          ) : (
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" className="w-4 h-4">
+              <path d="M3 7V3h4M13 3h4v4M3 13v4h4M17 13v4h-4"/>
+            </svg>
+          )}
+        </button>
 
         {/* AQI pill */}
         {air ? (

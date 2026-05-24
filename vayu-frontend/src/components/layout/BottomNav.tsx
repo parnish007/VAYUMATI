@@ -57,7 +57,7 @@ type Tab = { href: string; label: string; icon: React.ReactNode };
 const INDIVIDUAL_TABS: Tab[] = [
   { href: "/dashboard", label: "Home",      icon: HOME_ICON },
   { href: "/exposure",  label: "Exposure",  icon: EXPOSURE_ICON },
-  { href: "/pulse",     label: "Pulse",     icon: PULSE_ICON },
+  { href: "/alerts",    label: "Alerts",    icon: ALERTS_ICON },
   { href: "/chat",      label: "MATI",      icon: CHAT_ICON },
   { href: "/community", label: "Community", icon: COMMUNITY_ICON },
 ];

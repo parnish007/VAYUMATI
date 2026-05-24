@@ -49,7 +49,7 @@ async function initData() {
     await pool.query(
       `INSERT INTO users (id, username, name, role, ward_id, phone, status, avatar_url, password_hash, created_at)
        VALUES ($1,$2,$3,$4,$5,$6,'approved',NULL,$7,NOW())
-       ON CONFLICT (username) DO NOTHING`,
+       ON CONFLICT (id) DO UPDATE SET status = 'approved', password_hash = $7`,
       [u.id, u.username, u.name, u.role, u.ward_id, u.phone, HASH]
     );
   }

@@ -13,10 +13,14 @@ app.use(
       if (process.env.NODE_ENV !== "production" || !origin) return callback(null, true);
       const allowed = [
         process.env.FRONTEND_URL,
+        process.env.FRONTEND_URL_ALT, // optional second origin (e.g. renamed vercel project)
         "http://localhost:3000",
         "http://localhost:3001",
       ].filter(Boolean);
-      if (allowed.includes(origin)) return callback(null, true);
+      // Also allow any *.vercel.app origin (covers preview deploys and project renames)
+      if (allowed.includes(origin) || /^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(origin)) {
+        return callback(null, true);
+      }
       callback(new Error(`CORS: ${origin} not allowed`));
     },
     credentials: true,

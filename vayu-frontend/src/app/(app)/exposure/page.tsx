@@ -312,7 +312,16 @@ export default function ExposurePage() {
             </p>
           </button>
         )}
+
+        {/* Gradient morph — bleeds map color into the fingerprint strip below */}
+        <div
+          className="absolute bottom-0 inset-x-0 pointer-events-none z-[350] md:hidden"
+          style={{ height: "38%", background: "linear-gradient(to bottom, transparent 0%, #030e07 100%)" }}
+        />
       </div>
+
+      {/* ══ ROUTE FINGERPRINT — mobile seismograph strip ════════════════════ */}
+      <RouteFingerprint points={mapPoints} peak={peak} />
 
       {/* ══ STATS PANEL (right / bottom) ═════════════════════════════════════ */}
       <div className="w-full md:w-[340px] md:shrink-0 flex flex-col gap-3 px-4 py-4 md:px-0 md:py-0">
@@ -477,6 +486,119 @@ export default function ExposurePage() {
           </Card>
         )}
       </div>
+    </div>
+  );
+}
+
+// ─── Route AQI Fingerprint ────────────────────────────────────────────────────
+// Seismograph-style SVG bar chart — mobile only, sits between map and stats.
+// Each mapPoint becomes a vertical bar; height ∝ AQI; color = aqiColor(aqi).
+function RouteFingerprint({
+  points,
+  peak,
+}: {
+  points: ExposurePoint[];
+  peak: { startTs: number; endTs: number; aqi: number } | null;
+}) {
+  if (points.length === 0) return null;
+
+  const W = 1000;
+  const H = 68;
+  const maxBarH = H - 14;
+  const barSpacing = W / points.length;
+  const barW = Math.max(2, barSpacing - 1.5);
+
+  const peakPoint = points.reduce((a, b) => (b.aqi > a.aqi ? b : a), points[0]);
+  const peakIdx = points.indexOf(peakPoint);
+
+  // Smooth area fill path through bar tops
+  let areaPath = `M 0 ${H}`;
+  points.forEach((p, i) => {
+    const cx = i * barSpacing + barSpacing / 2;
+    const barH = Math.max(4, (p.aqi / 500) * maxBarH);
+    areaPath += ` L ${cx} ${H - barH}`;
+  });
+  areaPath += ` L ${W} ${H} Z`;
+
+  const peakCX = peakIdx * barSpacing + barSpacing / 2;
+  const peakBarH = Math.max(4, (peakPoint.aqi / 500) * maxBarH);
+  const peakTop = H - peakBarH;
+  const peakColor = aqiColor(peakPoint.aqi);
+
+  return (
+    <div
+      className="md:hidden w-full relative flex flex-col"
+      style={{ background: "#030e07", marginTop: -1 }}
+    >
+      {/* Top separator */}
+      <div
+        className="absolute top-0 inset-x-0 h-px pointer-events-none"
+        style={{ background: "linear-gradient(to right, transparent, rgba(61,139,94,0.25), transparent)" }}
+      />
+      {/* Labels row */}
+      <div className="flex items-center justify-between px-4 pt-2.5 pb-0.5">
+        <span
+          className="text-[8px] uppercase tracking-[1px] font-mono"
+          style={{ color: "#2a4a38" }}
+        >
+          ROUTE AQI FINGERPRINT · {points.length} READINGS
+        </span>
+        <span
+          className="text-[9px] font-mono tabular-nums font-semibold"
+          style={{ color: peakColor }}
+        >
+          peak {peakPoint.aqi}
+        </span>
+      </div>
+      {/* SVG fingerprint */}
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        preserveAspectRatio="none"
+        width="100%"
+        height={54}
+        style={{ display: "block" }}
+      >
+        <defs>
+          <linearGradient id="fp-area-fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={peakColor} stopOpacity="0.22" />
+            <stop offset="100%" stopColor={peakColor} stopOpacity="0.01" />
+          </linearGradient>
+        </defs>
+        {/* Area fill */}
+        <path d={areaPath} fill="url(#fp-area-fill)" />
+        {/* Bars */}
+        {points.map((p, i) => {
+          const bx = i * barSpacing + 0.75;
+          const barH = Math.max(4, (p.aqi / 500) * maxBarH);
+          return (
+            <rect
+              key={i}
+              x={bx}
+              y={H - barH}
+              width={barW}
+              height={barH}
+              rx={1}
+              fill={aqiColor(p.aqi)}
+              opacity={i === peakIdx ? 1 : 0.68}
+            />
+          );
+        })}
+        {/* Peak dashed connector + dot */}
+        <line
+          x1={peakCX} y1={peakTop - 6}
+          x2={peakCX} y2={3}
+          stroke={peakColor}
+          strokeWidth={1.5}
+          strokeDasharray="4 3"
+          opacity={0.75}
+        />
+        <circle cx={peakCX} cy={peakTop - 6} r={2.5} fill={peakColor} opacity={0.9} />
+      </svg>
+      {/* Bottom separator */}
+      <div
+        className="absolute bottom-0 inset-x-0 h-px pointer-events-none"
+        style={{ background: "linear-gradient(to right, transparent, rgba(61,139,94,0.12), transparent)" }}
+      />
     </div>
   );
 }

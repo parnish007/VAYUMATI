@@ -193,6 +193,9 @@ const ACTIVITY_META: Record<ActivityKind, { icon: string; color: string }> = {
   soil_compliance:      { icon: "🌾", color: "#d4a017" },
 };
 
+// ─── Thread-style activity feed ─────────────────────────────────────────────
+// Inspired by GitHub / Linear activity logs: no outer box, vertical left rail,
+// typed dot nodes, monospace timestamps. Every item stands on its own row.
 function ActivityFeed({ items }: { items: ActivityEntry[] }) {
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
   useEffect(() => {
@@ -202,44 +205,84 @@ function ActivityFeed({ items }: { items: ActivityEntry[] }) {
   function rel(ts: number) {
     const s = now - ts;
     if (s < 60)    return "just now";
-    if (s < 3600)  return `${Math.floor(s / 60)}m ago`;
-    if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
-    return `${Math.floor(s / 86400)}d ago`;
+    if (s < 3600)  return `${Math.floor(s / 60)}m`;
+    if (s < 86400) return `${Math.floor(s / 3600)}h`;
+    return `${Math.floor(s / 86400)}d`;
   }
+
+  const visible = items.slice(0, 5);
+
   return (
-    <div
-      className="rounded-2xl px-3 py-2.5 flex flex-col gap-2"
-      style={{ background: "#0d1f12", border: "1px solid rgba(61,139,94,0.18)" }}
-    >
-      <div className="flex items-center gap-2">
-        <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#4fa870", animation: "pulse-dot 1.6s infinite" }} />
-        <span className="text-[10px] font-bold uppercase tracking-[0.8px]" style={{ color: "#7dc99a" }}>
-          Live in Ward 11
+    <div className="flex flex-col">
+      {/* Header row — LIVE pill + count */}
+      <div className="flex items-center gap-2 mb-3 px-1">
+        <div
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
+          style={{ background: "rgba(79,168,112,0.10)", border: "1px solid rgba(79,168,112,0.25)" }}
+        >
+          <span
+            className="w-1.5 h-1.5 rounded-full"
+            style={{ background: "#4fa870", animation: "pulse-dot 1.6s infinite" }}
+          />
+          <span className="text-[9px] font-bold uppercase tracking-[1px]" style={{ color: "#4fa870" }}>
+            Live
+          </span>
+        </div>
+        <span className="text-[10px] font-semibold" style={{ color: "#8aad96" }}>
+          Ward 11 activity
         </span>
-        <span className="text-[10px] ml-auto" style={{ color: "#4d7a5e" }}>
-          {items.length} actions · last 90 min
+        <span className="text-[9px] ml-auto font-mono" style={{ color: "#2d5040" }}>
+          {items.length} actions · 90 min
         </span>
       </div>
-      <div className="flex flex-col gap-1.5">
-        {items.slice(0, 4).map((a) => {
+
+      {/* Thread rows */}
+      <div className="relative pl-7">
+        {/* Vertical rail */}
+        <div
+          className="absolute left-2.5 top-2 bottom-2 w-px pointer-events-none"
+          style={{ background: "linear-gradient(to bottom, rgba(61,139,94,0.35), rgba(61,139,94,0.05))" }}
+        />
+
+        {visible.map((a, idx) => {
           const meta = ACTIVITY_META[a.kind];
+          const isLast = idx === visible.length - 1;
           return (
-            <div key={a.id} className="flex items-center gap-2 text-[11px]">
-              <span
-                className="w-5 h-5 rounded-full shrink-0 flex items-center justify-center text-[11px]"
-                style={{ background: `${meta.color}1f`, border: `1px solid ${meta.color}40` }}
+            <div key={a.id} className="relative flex items-start gap-3 pb-3">
+              {/* Rail node */}
+              <div
+                className="absolute -left-4 top-1 w-3 h-3 rounded-full flex items-center justify-center shrink-0"
+                style={{
+                  background: `${meta.color}22`,
+                  border: `1.5px solid ${meta.color}`,
+                  boxShadow: idx === 0 ? `0 0 8px ${meta.color}55` : "none",
+                }}
               >
-                {meta.icon}
-              </span>
-              <span className="font-semibold text-parchment shrink-0">{a.actor}</span>
-              <span className="truncate" style={{ color: "#8aad96" }}>{a.detail}</span>
-              {a.pa != null && (
-                <span className="shrink-0 px-1.5 py-0.5 rounded text-[9px] font-bold"
-                  style={{ background: "rgba(212,160,23,0.14)", color: "#d4a017" }}>
-                  +{a.pa}
+                <span style={{ fontSize: 6, lineHeight: 1 }}>{meta.icon}</span>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 min-w-0 pt-0.5">
+                <div className="flex items-baseline gap-1.5 flex-wrap">
+                  <span className="text-[11px] font-semibold" style={{ color: "#d4e8da" }}>
+                    {a.actor}
+                  </span>
+                  <span className="text-[11px]" style={{ color: "#6a9c7a" }}>
+                    {a.detail}
+                  </span>
+                  {a.pa != null && (
+                    <span
+                      className="shrink-0 px-1.5 py-px rounded text-[9px] font-bold tabular-nums"
+                      style={{ background: "rgba(212,160,23,0.13)", color: "#d4a017" }}
+                    >
+                      +{a.pa}
+                    </span>
+                  )}
+                </div>
+                <span className="text-[9px] font-mono mt-0.5 block" style={{ color: "#2d5040" }}>
+                  {rel(a.ts)} ago
                 </span>
-              )}
-              <span className="shrink-0 ml-auto text-[9px]" style={{ color: "#4d7a5e" }}>{rel(a.ts)}</span>
+              </div>
             </div>
           );
         })}
@@ -381,6 +424,17 @@ const DEMO_PAST_INITIATIVES: PastInitiative[] = [
 
 function initials(name: string) {
   return name.slice(0, 2).toUpperCase();
+}
+
+// Deterministic avatar color from name string
+function stringToColor(s: string): string {
+  const PALETTE = [
+    "#3d8b5e", "#2d7a9a", "#7b2d8b", "#d4a017",
+    "#4fa870", "#c44b2b", "#4d7a9a", "#e8600a",
+  ];
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return PALETTE[h % PALETTE.length];
 }
 
 function formatDate(iso: string) {
@@ -1127,16 +1181,17 @@ interface DiaryEntry {
   user_name: string;
   entry_type: string;
   note: string;
+  photo_url?: string;
   ward_id: string;
   ts: number;
 }
 
 const DEMO_DIARY: DiaryEntry[] = [
-  { id: "d1", user_id: "u1", user_name: "Anisha Tamang",  entry_type: "watered",      note: "Tomatoes looking healthier after rain",   ward_id: "11", ts: Math.floor(Date.now()/1000) - 7200  },
-  { id: "d2", user_id: "u2", user_name: "Ram Shrestha",   entry_type: "soil_checked", note: "pH was 6.1, added lime",                   ward_id: "11", ts: Math.floor(Date.now()/1000) - 18000 },
-  { id: "d3", user_id: "u3", user_name: "Sita Gurung",    entry_type: "harvest",      note: "First mustard harvest of the season!",    ward_id: "11", ts: Math.floor(Date.now()/1000) - 43200 },
-  { id: "d4", user_id: "u4", user_name: "Hari Maharjan",  entry_type: "problem",      note: "Leaves yellowing near east corner",        ward_id: "11", ts: Math.floor(Date.now()/1000) - 86400 },
-  { id: "d5", user_id: "u5", user_name: "Kamala Shrestha",entry_type: "fertilized",   note: "Organic compost only, no chemicals",       ward_id: "11", ts: Math.floor(Date.now()/1000) - 172800},
+  { id: "d1", user_id: "u1", user_name: "Anisha Tamang",   entry_type: "watered",      note: "Tomatoes looking healthier after rain",   photo_url: "https://picsum.photos/seed/tomatoes-thimi/600/340", ward_id: "11", ts: Math.floor(Date.now()/1000) - 7200   },
+  { id: "d2", user_id: "u2", user_name: "Ram Shrestha",    entry_type: "soil_checked", note: "pH was 6.1, added lime",                   ward_id: "11", ts: Math.floor(Date.now()/1000) - 18000  },
+  { id: "d3", user_id: "u3", user_name: "Sita Gurung",     entry_type: "harvest",      note: "First mustard harvest of the season!",    photo_url: "https://picsum.photos/seed/mustard-harvest/600/340", ward_id: "11", ts: Math.floor(Date.now()/1000) - 43200  },
+  { id: "d4", user_id: "u4", user_name: "Hari Maharjan",   entry_type: "problem",      note: "Leaves yellowing near east corner",        ward_id: "11", ts: Math.floor(Date.now()/1000) - 86400  },
+  { id: "d5", user_id: "u5", user_name: "Kamala Shrestha", entry_type: "fertilized",   note: "Organic compost only, no chemicals",       ward_id: "11", ts: Math.floor(Date.now()/1000) - 172800 },
 ];
 
 function diaryTimeAgo(ts: number): string {
@@ -1162,6 +1217,9 @@ function MeroBariTab({
 }) {
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [note, setNote] = useState("");
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
   const [submitting, setSubmitting] = useState(false);
   const [paToast, setPaToast] = useState<string | null>(null);
   const [localEntries, setLocalEntries] = useState<DiaryEntry[]>([]);
@@ -1179,6 +1237,21 @@ function MeroBariTab({
     ? [...localEntries, ...DEMO_DIARY]
     : [...localEntries, ...(remoteEntries ?? [])];
 
+  function handlePhotoSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPhotoFile(file);
+    const reader = new FileReader();
+    reader.onload = (ev) => setPhotoPreview(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  }
+
+  function removePhoto() {
+    setPhotoFile(null);
+    setPhotoPreview(null);
+    if (photoInputRef.current) photoInputRef.current.value = "";
+  }
+
   async function handleSubmit() {
     if (!selectedType) return;
     setSubmitting(true);
@@ -1190,6 +1263,7 @@ function MeroBariTab({
           user_name:  "You",
           entry_type: selectedType,
           note:       note.trim(),
+          photo_url:  photoPreview ?? undefined,
           ward_id:    wardId,
           ts:         Math.floor(Date.now() / 1000),
         };
@@ -1225,6 +1299,7 @@ function MeroBariTab({
       }
       setSelectedType(null);
       setNote("");
+      removePhoto();
     } finally {
       setSubmitting(false);
     }
@@ -1320,6 +1395,49 @@ function MeroBariTab({
                 caretColor: "#4fa870",
               }}
             />
+
+            {/* Photo attach */}
+            <input
+              ref={photoInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="hidden"
+              onChange={handlePhotoSelect}
+            />
+            {photoPreview ? (
+              <div className="relative rounded-xl overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={photoPreview}
+                  alt="preview"
+                  className="w-full object-cover rounded-xl"
+                  style={{ maxHeight: 180 }}
+                />
+                <button
+                  type="button"
+                  onClick={removePhoto}
+                  className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                  style={{ background: "rgba(0,0,0,0.65)", color: "#f0ede8" }}
+                >
+                  ×
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => photoInputRef.current?.click()}
+                className="flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-semibold w-fit"
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(61,139,94,0.18)",
+                  color: "#4d7a5e",
+                }}
+              >
+                <span>📷</span> Add photo
+              </button>
+            )}
+
             <div className="flex items-center justify-between gap-3">
               <span className="text-[10px]" style={{ color: "#2d5040" }}>
                 {selectedType !== "fertilized"
@@ -1358,98 +1476,123 @@ function MeroBariTab({
         </div>
       )}
 
-      {/* Feed */}
+      {/* Feed — thread-style, inspired by Instagram/BeReal but with sensor data */}
       <div>
-        <div className="flex items-center justify-between mb-2.5">
-          <h3 className="font-semibold text-parchment text-sm">
-            Ward Garden Feed
-          </h3>
+        <div className="flex items-center justify-between mb-3 px-1">
+          <h3 className="font-semibold text-parchment text-sm">Ward Garden Feed</h3>
           <span className="text-[10px]" style={{ color: "#4d7a5e" }}>
             {entries.length} logs
           </span>
         </div>
 
-        <div className="flex flex-col gap-2">
-          {entries.length === 0 ? (
+        {entries.length === 0 ? (
+          <div
+            className="rounded-2xl px-4 py-8 text-center"
+            style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(61,139,94,0.10)" }}
+          >
+            <p className="text-sm" style={{ color: "#2d5040" }}>
+              No entries yet — log your first garden activity above!
+            </p>
+          </div>
+        ) : (
+          <div className="relative pl-10">
+            {/* Vertical thread rail */}
             <div
-              className="rounded-2xl px-4 py-8 text-center"
-              style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(61,139,94,0.10)" }}
-            >
-              <p className="text-sm" style={{ color: "#2d5040" }}>
-                No entries yet — log your first garden activity above!
-              </p>
-            </div>
-          ) : (
-            entries.map((e) => {
+              className="absolute left-4 top-4 bottom-4 w-px pointer-events-none"
+              style={{ background: "linear-gradient(to bottom, rgba(61,139,94,0.30), rgba(61,139,94,0.04))" }}
+            />
+
+            {entries.map((e, idx) => {
               const meta = DIARY_TYPE_META[e.entry_type] ?? { icon: "📝", label: e.entry_type, color: "#4d7a5e" };
-              const initials = e.user_name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+              const nameInitials = e.user_name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase();
+              const avatarColor = stringToColor(e.user_name);
+              const isLast = idx === entries.length - 1;
               return (
-                <div
-                  key={e.id}
-                  className="rounded-2xl px-4 py-3 flex items-start gap-3"
-                  style={{
-                    background: "#0d1f12",
-                    border: "1px solid rgba(61,139,94,0.12)",
-                  }}
-                >
-                  {/* Avatar */}
+                <div key={e.id} className={`relative flex flex-col ${isLast ? "pb-2" : "pb-4"}`}>
+                  {/* Avatar on rail */}
                   <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5"
+                    className="absolute -left-6 top-0 w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 z-10"
                     style={{
-                      background: "rgba(61,139,94,0.15)",
-                      border: "1px solid rgba(61,139,94,0.25)",
-                      color: "#7dc99a",
+                      background: `${avatarColor}22`,
+                      border: `2px solid ${avatarColor}`,
+                      color: avatarColor,
                     }}
                   >
-                    {initials}
+                    {nameInitials}
                   </div>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-[11px] font-semibold" style={{ color: "#c8ddd0" }}>
-                        {e.user_name}
-                      </span>
-                      {/* Type badge */}
-                      <span
-                        className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold"
-                        style={{
-                          background: `${meta.color}18`,
-                          border: `1px solid ${meta.color}44`,
-                          color: meta.color,
-                        }}
-                      >
-                        {meta.icon} {meta.label}
-                      </span>
-                      {e.entry_type !== "fertilized" && (
+                  {/* Card body — no outer border, just subtle bg */}
+                  <div
+                    className="rounded-2xl overflow-hidden"
+                    style={{ background: "#0d1f12" }}
+                  >
+                    {/* Photo — full-width when present */}
+                    {e.photo_url && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={e.photo_url}
+                        alt="garden photo"
+                        className="w-full object-cover"
+                        style={{ maxHeight: 220, display: "block" }}
+                      />
+                    )}
+
+                    {/* Text content */}
+                    <div className="px-3.5 py-3">
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <span className="text-[11px] font-semibold" style={{ color: "#d4e8da" }}>
+                          {e.user_name}
+                        </span>
                         <span
-                          className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
+                          className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-semibold"
                           style={{
-                            background: "rgba(79,168,112,0.10)",
-                            color: "#4fa870",
-                            border: "1px solid rgba(79,168,112,0.25)",
+                            background: `${meta.color}18`,
+                            border: `1px solid ${meta.color}44`,
+                            color: meta.color,
                           }}
                         >
-                          +20 PA
+                          {meta.icon} {meta.label}
                         </span>
+                        {e.entry_type !== "fertilized" && (
+                          <span
+                            className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
+                            style={{
+                              background: "rgba(79,168,112,0.10)",
+                              color: "#4fa870",
+                              border: "1px solid rgba(79,168,112,0.25)",
+                            }}
+                          >
+                            +20 PA
+                          </span>
+                        )}
+                      </div>
+                      {e.note && (
+                        <p className="text-[12px] leading-relaxed" style={{ color: "#8aad96" }}>
+                          {e.note}
+                        </p>
                       )}
+
+                      {/* Social action row */}
+                      <div className="flex items-center gap-3 mt-2.5 pt-2" style={{ borderTop: "1px solid rgba(61,139,94,0.08)" }}>
+                        <button className="flex items-center gap-1 text-[10px] transition-opacity hover:opacity-70" style={{ color: "#4d7a5e" }}>
+                          <span>♥</span>
+                          <span>Like</span>
+                        </button>
+                        <button className="flex items-center gap-1 text-[10px] transition-opacity hover:opacity-70" style={{ color: "#4d7a5e" }}>
+                          <span>💬</span>
+                          <span>Reply</span>
+                        </button>
+                        <span className="ml-auto text-[9px] font-mono" style={{ color: "#2d5040" }}>
+                          {diaryTimeAgo(e.ts)}
+                        </span>
+                      </div>
                     </div>
-                    {e.note && (
-                      <p
-                        className="text-[11px] mt-1 leading-relaxed"
-                        style={{ color: "#8aad96" }}
-                      >
-                        {e.note}
-                      </p>
-                    )}
-                    <p className="text-[9px] mt-1" style={{ color: "#2d5040" }}>
-                      {diaryTimeAgo(e.ts)}
-                    </p>
                   </div>
                 </div>
               );
-            })
-          )}
-        </div>
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

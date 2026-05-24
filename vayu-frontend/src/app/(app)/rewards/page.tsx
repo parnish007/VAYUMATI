@@ -106,7 +106,7 @@ export default function RewardsPage() {
   const topPct = rank ? Math.round((rank / 40) * 100) : null;
 
   return (
-    <div className="flex flex-col gap-5 max-w-xl mx-auto animate-fade-up">
+    <div className="flex flex-col gap-5 max-w-xl mx-auto animate-fade-up pb-4">
       <div className="flex items-start justify-between gap-2">
         <div>
           <h1 className="font-display text-2xl font-semibold text-parchment">Rewards &amp; PA Score</h1>

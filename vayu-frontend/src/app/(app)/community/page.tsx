@@ -1765,9 +1765,9 @@ export default function CommunityPage() {
           <button
             key={t}
             onClick={() => { setActiveTab(t); setTabPinned(true); }}
-            className="flex-1 py-1.5 rounded-xl font-semibold transition-all inline-flex items-center justify-center gap-1"
+            className="flex-1 py-2.5 rounded-xl font-semibold transition-all inline-flex items-center justify-center gap-1.5"
             style={{
-              fontSize: 10,
+              fontSize: 11,
               ...(activeTab === t
                 ? {
                     background: "#1a2f20",
@@ -1778,8 +1778,7 @@ export default function CommunityPage() {
             }}
           >
             <Icon className="w-3 h-3 shrink-0" />
-            <span className="hidden xs:inline">{label}</span>
-            <span className="xs:hidden">{label}</span>
+            <span>{label}</span>
           </button>
         ))}
       </div>

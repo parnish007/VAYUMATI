@@ -197,7 +197,9 @@ export default function DashboardPage() {
             <div>
               <p className="text-[10px] uppercase tracking-[0.5px] mb-1" style={{ color: `${color}99` }}>Air Quality Index</p>
               <p className="font-display font-black leading-none" style={{ fontSize: 52, color }}>{aqi}</p>
-              <p className="text-sm font-semibold mt-1" style={{ color }}>⚠ {aqiLabel(aqi)}</p>
+              <p className="text-sm font-semibold mt-1" style={{ color }}>
+                {aqi > 100 ? "⚠ " : aqi > 50 ? "◉ " : "✓ "}{aqiLabel(aqi)}
+              </p>
             </div>
             <div className="relative w-20 h-20 flex-shrink-0">
               <svg width="80" height="80" viewBox="0 0 80 80" style={{ transform: "rotate(-90deg)" }}>
@@ -264,7 +266,7 @@ export default function DashboardPage() {
           <div className="flex" style={{ borderBottom: "1px solid rgba(61,139,94,0.14)" }}>
             {ADV_TABS.map((tab) => (
               <button key={tab} onClick={() => setAdvTab(tab)}
-                className="flex-1 py-2.5 text-[10px] font-semibold transition-colors"
+                className="flex-1 py-3.5 text-[11px] font-semibold transition-colors"
                 style={advTab === tab
                   ? { color: "#7dc99a", borderBottom: "2px solid #4fa870" }
                   : { color: "#4d7a5e", borderBottom: "2px solid transparent" }}>

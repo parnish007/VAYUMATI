@@ -40,6 +40,7 @@ const SEV_LABEL: Record<number, string> = {
 export default function AlertsPage() {
   const { isDemo, role } = useCurrentUser();
   const [showNe, setShowNe] = useState(false);
+  const [triggering, setTriggering] = useState(false);
 
   const { data: advisoryRaw, isLoading, mutate } = useSWR<Advisory[]>(
     isDemo ? null : `/api/advisory/history?ward_id=${WARD_ID}&limit=20`,
@@ -129,17 +130,25 @@ export default function AlertsPage() {
         <p className="text-sm font-semibold text-parchment">Trigger MATI Advisory</p>
         <p className="text-xs text-mist">Request an immediate analysis from the MATI agent for Ward {WARD_ID}.</p>
         <button
-          onClick={() => {
-            fetch(`${getBackendUrl()}/api/advisory/trigger`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ ward_id: WARD_ID, field_id: "A1", reason: "manual_trigger" }),
-            }).then(() => mutate()).catch(() => null);
+          disabled={triggering}
+          onClick={async () => {
+            if (triggering) return;
+            setTriggering(true);
+            try {
+              await fetch(`${getBackendUrl()}/api/advisory/trigger`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ward_id: WARD_ID, field_id: "A1", reason: "manual_trigger" }),
+              });
+              mutate();
+            } finally {
+              setTriggering(false);
+            }
           }}
-          className="py-2.5 rounded-xl text-sm font-semibold"
+          className="py-2.5 rounded-xl text-sm font-semibold transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
           style={{ background: "#1a2f20", border: "1px solid rgba(61,139,94,0.3)", color: "#7dc99a" }}
         >
-          Run MATI Now
+          {triggering ? "Running MATI…" : "Run MATI Now"}
         </button>
       </Card>
     </div>

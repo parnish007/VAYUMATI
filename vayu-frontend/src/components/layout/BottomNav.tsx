@@ -53,6 +53,7 @@ export function BottomNav() {
         borderTop: "1px solid rgba(61, 139, 94, 0.18)",
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
+        paddingBottom: "env(safe-area-inset-bottom)",
       }}
     >
       {tabs.map(({ href, label, icon }) => {

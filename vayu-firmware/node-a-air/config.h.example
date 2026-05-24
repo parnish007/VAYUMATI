@@ -1,0 +1,65 @@
+#pragma once
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  config.h — VayuMitti Node A (Air)
+//  ESP32-WROOM-32 + MQ135 + DHT22/DHT11 + SSD1306 OLED
+//
+//  SETUP:
+//    1. Copy this file to config.h
+//    2. Fill in WIFI_SSID_1/WIFI_PASS_1 (venue WiFi) and
+//       WIFI_SSID_2/WIFI_PASS_2 (phone hotspot fallback)
+//    3. Set DHT_TYPE to match your sensor (DHT22 or DHT11)
+//    4. Flash to ESP32
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ── WiFi ─────────────────────────────────────────────────────────────────────
+#define WIFI_SSID_1     "YOUR_PRIMARY_WIFI_SSID"    // venue WiFi
+#define WIFI_PASS_1     "YOUR_PRIMARY_WIFI_PASSWORD"
+#define WIFI_SSID_2     "YOUR_HOTSPOT_SSID"         // phone hotspot fallback
+#define WIFI_PASS_2     "YOUR_HOTSPOT_PASSWORD"
+#define WIFI_TIMEOUT_MS  15000                       // 15s per attempt
+#define WIFI_RETRY_MS    30000                       // retry every 30s
+
+// ── MQTT ─────────────────────────────────────────────────────────────────────
+#define MQTT_HOST       "broker.hivemq.com"
+#define MQTT_PORT       1883
+#define MQTT_TOPIC      "vayu/node/A1/readings"
+#define MQTT_BUF_SIZE   512
+
+// ── Timing ───────────────────────────────────────────────────────────────────
+#define READ_INTERVAL_MS  5000   // read + publish every 5 seconds
+
+// ── DHT sensor type ───────────────────────────────────────────────────────────
+//  DHT22 = white sensor (more accurate, recommended)
+//  DHT11 = blue sensor  (less accurate)
+#define DHT_TYPE        DHT11
+
+// ── OLED (SSD1306, 128x64, I2C) ──────────────────────────────────────────────
+#define OLED_WIDTH      128
+#define OLED_HEIGHT      64
+#define OLED_ADDR       0x3C   // if screen stays blank, try 0x3D
+
+// ── Pin assignments ───────────────────────────────────────────────────────────
+//  MQ135 → VP / GPIO36 (ADC1 — required; ADC2 doesn't work with WiFi active)
+#define PIN_MQ135       36
+
+//  DHT → D4 / GPIO4
+#define PIN_DHT          4
+
+//  OLED I2C
+#define PIN_SDA         21
+#define PIN_SCL         22
+
+// ── MQ135 calibration ────────────────────────────────────────────────────────
+//  R0 = sensor resistance in clean air (kΩ). Run calibration sketch first.
+//  Default 76.63 works for most fresh MQ135 modules.
+#define R0_MQ135        76.63f
+#define RL_MQ135        10.0f
+#define MQ135_WARMUP_MS 30000   // 30s warmup — readings before this are ~400ppm
+
+// ── AQI alert levels (for OLED border) ───────────────────────────────────────
+#define AQI_UNHEALTHY   150
+#define AQI_HAZARDOUS   200
+
+// ── HTTP fallback server ──────────────────────────────────────────────────────
+#define HTTP_PORT        80

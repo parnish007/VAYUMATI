@@ -22,11 +22,11 @@ const INDIVIDUAL_TABS: Tab[] = [
 ];
 
 const FARMER_TABS: Tab[] = [
-  { href: "/dashboard", label: "Home",      icon: <Home     size={20} strokeWidth={1.8} /> },
-  { href: "/ward",      label: "Soil/Air",  icon: <Leaf     size={20} strokeWidth={1.8} /> },
-  { href: "/pulse",     label: "Pulse",     icon: <Activity size={20} strokeWidth={1.8} /> },
-  { href: "/exposure",  label: "Exposure",  icon: <MapPin   size={20} strokeWidth={1.8} /> },
-  { href: "/community", label: "Community", icon: <Users    size={20} strokeWidth={1.8} /> },
+  { href: "/dashboard", label: "Home",      icon: <Home          size={20} strokeWidth={1.8} /> },
+  { href: "/ward",      label: "Soil/Air",  icon: <Leaf          size={20} strokeWidth={1.8} /> },
+  { href: "/chat",      label: "MATI",      icon: <MessageSquare size={20} strokeWidth={1.8} /> },
+  { href: "/exposure",  label: "Exposure",  icon: <MapPin        size={20} strokeWidth={1.8} /> },
+  { href: "/community", label: "Community", icon: <Users         size={20} strokeWidth={1.8} /> },
 ];
 
 const EXECUTIVE_TABS: Tab[] = [

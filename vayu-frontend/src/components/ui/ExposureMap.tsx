@@ -29,9 +29,13 @@ const ATTRIBUTION = '&copy; <a href="https://carto.com/" target="_blank">CARTO</
 // ─── Pulse + marker CSS (injected once, idempotent) ──────────────────────────
 const STYLES = `
 @keyframes vayu-pulse {
-  0%   { transform: scale(1);   opacity: 0.55; }
-  70%  { transform: scale(2.4); opacity: 0;    }
-  100% { transform: scale(2.4); opacity: 0;    }
+  0%   { transform: scale(1);   opacity: 0.60; }
+  70%  { transform: scale(3.2); opacity: 0;    }
+  100% { transform: scale(3.2); opacity: 0;    }
+}
+@keyframes vayu-wp-in {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1);   }
 }
 .vayu-pulse-wrap {
   position: relative;
@@ -64,6 +68,7 @@ const STYLES = `
   box-shadow: 0 2px 8px rgba(0,0,0,0.45);
   transform: translate(-50%, -50%);
   white-space: nowrap;
+  animation: vayu-wp-in 0.28s ease-out both;
 }
 .vayu-waypoint-pill.selected {
   outline: 2px solid #f2ede4;
@@ -115,12 +120,12 @@ function buildPulseIcon(color: string) {
   });
 }
 
-function buildWaypointPill(aqi: number, selected: boolean) {
+function buildWaypointPill(aqi: number, selected: boolean, idx: number) {
   const color = aqiColor(aqi);
   return L.divIcon({
     className: "vayu-waypoint",
     html: `
-      <div class="vayu-waypoint-pill${selected ? " selected" : ""}" style="background:${color};">
+      <div class="vayu-waypoint-pill${selected ? " selected" : ""}" style="background:${color};animation-delay:${idx * 80}ms;">
         <span class="dot"></span>
         <span>${aqi}</span>
       </div>
@@ -174,7 +179,7 @@ export default function ExposureMap({
           pathOptions={{
             stroke: false,
             fillColor: aqiColor(p.aqi),
-            fillOpacity: 0.10,
+            fillOpacity: 0.16,
           }}
           interactive={false}
         />
@@ -224,7 +229,7 @@ export default function ExposureMap({
           <Marker
             key={`wp-${i}`}
             position={[p.lat, p.lng]}
-            icon={buildWaypointPill(p.aqi, selectedIdx === i)}
+            icon={buildWaypointPill(p.aqi, selectedIdx === i, i)}
             eventHandlers={onSelect ? { click: () => onSelect(i) } : undefined}
           />
         );

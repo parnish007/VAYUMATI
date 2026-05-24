@@ -322,28 +322,35 @@ export const DEMO_SELFIES: MaskSelfie[] = [
 
 export const DEMO_PEOPLE_COUNT = 47000;
 
-// ─── Exposure timeline (expanded to a full commute day) ──────────────────────
-// 12 GPS points: home → bus stop → walk through Thimi chowk → workplace and back.
-// Spans ~8 hours so the day-timeline visualisation has real shape.
+// ─── Exposure timeline — full commute day across ~3km of Kathmandu Ward 11 ───
+// 18 GPS points: home (Gwarko/Balkumari) → ring road → kiln corridor (PEAK) →
+// Baneshwor workplace → evening return. Spread intentionally so Leaflet auto-fit
+// shows neighbourhood-scale context instead of zooming to a single block.
 export const DEMO_EXPOSURE_REPORT: ExposureReport = {
   date: new Date().toISOString().slice(0, 10),
   points: [
-    { ts: NOW() - 28800, lat: 27.7156, lng: 85.3222, aqi: 96,  dose_ug: 96  }, // 8h ago — home
-    { ts: NOW() - 27000, lat: 27.7162, lng: 85.3241, aqi: 108, dose_ug: 108 }, // walk
-    { ts: NOW() - 25200, lat: 27.7174, lng: 85.3265, aqi: 134, dose_ug: 134 }, // bus stop near road
-    { ts: NOW() - 21600, lat: 27.7191, lng: 85.3298, aqi: 158, dose_ug: 158 }, // Thimi chowk
-    { ts: NOW() - 19800, lat: 27.7205, lng: 85.3325, aqi: 175, dose_ug: 175 }, // kiln-adjacent road
-    { ts: NOW() - 18000, lat: 27.7220, lng: 85.3340, aqi: 184, dose_ug: 184 }, // peak — diesel chowk
-    { ts: NOW() - 14400, lat: 27.7232, lng: 85.3358, aqi: 167, dose_ug: 167 }, // workplace
-    { ts: NOW() - 10800, lat: 27.7232, lng: 85.3358, aqi: 152, dose_ug: 152 }, // workplace indoor
-    { ts: NOW() -  9000, lat: 27.7224, lng: 85.3345, aqi: 145, dose_ug: 145 }, // lunch walk
-    { ts: NOW() -  7200, lat: 27.7232, lng: 85.3358, aqi: 142, dose_ug: 142 }, // back to office
-    { ts: NOW() -  3600, lat: 27.7195, lng: 85.3302, aqi: 161, dose_ug: 161 }, // evening commute
-    { ts: NOW() -   900, lat: 27.7160, lng: 85.3245, aqi: 138, dose_ug: 138 }, // near home
+    { ts: NOW() - 28800, lat: 27.6945, lng: 85.3048, aqi:  72, dose_ug:  72 }, // 8h ago — home, quiet lane
+    { ts: NOW() - 27600, lat: 27.6968, lng: 85.3082, aqi:  88, dose_ug:  88 }, // walking to bus stop
+    { ts: NOW() - 27000, lat: 27.6994, lng: 85.3124, aqi: 114, dose_ug: 114 }, // main road bus stop
+    { ts: NOW() - 26200, lat: 27.7022, lng: 85.3165, aqi: 141, dose_ug: 141 }, // Koteshwor junction
+    { ts: NOW() - 25200, lat: 27.7048, lng: 85.3202, aqi: 163, dose_ug: 163 }, // ring road crossing
+    { ts: NOW() - 23800, lat: 27.7071, lng: 85.3238, aqi: 181, dose_ug: 181 }, // brick kiln road entry
+    { ts: NOW() - 22200, lat: 27.7092, lng: 85.3272, aqi: 207, dose_ug: 207 }, // kiln cluster — AQI peak
+    { ts: NOW() - 20400, lat: 27.7108, lng: 85.3308, aqi: 193, dose_ug: 193 }, // Thimi chowk east
+    { ts: NOW() - 18600, lat: 27.7121, lng: 85.3335, aqi: 174, dose_ug: 174 }, // diesel bus stand
+    { ts: NOW() - 16800, lat: 27.7135, lng: 85.3358, aqi: 156, dose_ug: 156 }, // approaching Baneshwor
+    { ts: NOW() - 14400, lat: 27.7148, lng: 85.3382, aqi: 138, dose_ug: 138 }, // workplace arrival
+    { ts: NOW() - 10800, lat: 27.7148, lng: 85.3382, aqi: 124, dose_ug: 124 }, // workplace (indoors)
+    { ts: NOW() -  9200, lat: 27.7138, lng: 85.3364, aqi: 137, dose_ug: 137 }, // lunch walk
+    { ts: NOW() -  7200, lat: 27.7148, lng: 85.3382, aqi: 121, dose_ug: 121 }, // back to office
+    { ts: NOW() -  5400, lat: 27.7118, lng: 85.3328, aqi: 162, dose_ug: 162 }, // evening commute — diesel jam
+    { ts: NOW() -  3600, lat: 27.7088, lng: 85.3265, aqi: 198, dose_ug: 198 }, // kiln road again (worse at dusk)
+    { ts: NOW() -  2100, lat: 27.7055, lng: 85.3215, aqi: 172, dose_ug: 172 }, // ring road evening
+    { ts: NOW() -   600, lat: 27.6978, lng: 85.3104, aqi: 118, dose_ug: 118 }, // near home — tapering
   ],
-  total_dose_ug: 1760,
-  cigarette_equiv: 14.7,
-  avg_aqi: 147,
+  total_dose_ug: 2611,
+  cigarette_equiv: 21.8,
+  avg_aqi: 158,
 };
 
 // ─── 24-hour AQI cycle (full day with morning + evening peaks) ───────────────

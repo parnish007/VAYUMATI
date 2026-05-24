@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Home, MapPin, Activity, Bell, MessageSquare, Users,
+  Home, MapPin, Bell, MessageSquare, Users,
   Wifi, Leaf, ClipboardList,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -13,12 +13,11 @@ import { useCurrentUser } from "@/hooks/useCurrentUser";
 type Tab = { href: string; label: string; icon: ReactNode };
 
 const INDIVIDUAL_TABS: Tab[] = [
-  { href: "/dashboard", label: "Home",      icon: <Home         size={20} strokeWidth={1.8} /> },
-  { href: "/exposure",  label: "Exposure",  icon: <MapPin       size={20} strokeWidth={1.8} /> },
-  { href: "/pulse",     label: "Pulse",     icon: <Activity     size={20} strokeWidth={1.8} /> },
-  { href: "/alerts",    label: "Alerts",    icon: <Bell         size={20} strokeWidth={1.8} /> },
+  { href: "/dashboard", label: "Home",      icon: <Home          size={20} strokeWidth={1.8} /> },
+  { href: "/exposure",  label: "Exposure",  icon: <MapPin        size={20} strokeWidth={1.8} /> },
+  { href: "/alerts",    label: "Alerts",    icon: <Bell          size={20} strokeWidth={1.8} /> },
   { href: "/chat",      label: "MATI",      icon: <MessageSquare size={20} strokeWidth={1.8} /> },
-  { href: "/community", label: "Community", icon: <Users        size={20} strokeWidth={1.8} /> },
+  { href: "/community", label: "Community", icon: <Users         size={20} strokeWidth={1.8} /> },
 ];
 
 const FARMER_TABS: Tab[] = [

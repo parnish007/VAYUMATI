@@ -322,35 +322,26 @@ export const DEMO_SELFIES: MaskSelfie[] = [
 
 export const DEMO_PEOPLE_COUNT = 47000;
 
-// ─── Exposure timeline — realistic S-curve commute through Kathmandu ─────────
-// Route traces actual road geometry: Lagankhel → Ring Road east bend →
-// Koteshwor north curve → kiln corridor (NW detour) → Thimi → Bhaktapur road.
-// Non-linear so map shows a proper road-following path, not a straight diagonal.
+// ─── Exposure timeline — 10-waypoint S-curve commute, Lagankhel → Bhaktapur rd
+// Each point is a named landmark; gaps are wide enough that the map path looks
+// like a natural road trace rather than a dense cloud of overlapping dots.
 export const DEMO_EXPOSURE_REPORT: ExposureReport = {
   date: new Date().toISOString().slice(0, 10),
   points: [
-    { ts: NOW() - 28800, lat: 27.6601, lng: 85.3032, aqi:  72, dose_ug:  72 }, // home — Lagankhel, Patan (SW)
-    { ts: NOW() - 27600, lat: 27.6668, lng: 85.3088, aqi:  85, dose_ug:  85 }, // Jawalakhel, heading NE
-    { ts: NOW() - 27000, lat: 27.6724, lng: 85.3158, aqi: 108, dose_ug: 108 }, // Ekantakuna — road bends east
-    { ts: NOW() - 26200, lat: 27.6771, lng: 85.3238, aqi: 131, dose_ug: 131 }, // Satdobato ring road, going E
-    { ts: NOW() - 25200, lat: 27.6812, lng: 85.3318, aqi: 152, dose_ug: 152 }, // ring road curves more east
-    { ts: NOW() - 23800, lat: 27.6884, lng: 85.3374, aqi: 166, dose_ug: 166 }, // Balkumari — road bends north
-    { ts: NOW() - 22200, lat: 27.6968, lng: 85.3358, aqi: 178, dose_ug: 178 }, // Koteshwor chowk, heading N
-    { ts: NOW() - 21000, lat: 27.7038, lng: 85.3312, aqi: 191, dose_ug: 191 }, // road curves NW toward kilns
-    { ts: NOW() - 19800, lat: 27.7081, lng: 85.3248, aqi: 207, dose_ug: 207 }, // kiln cluster — AQI PEAK (W)
-    { ts: NOW() - 18200, lat: 27.7118, lng: 85.3298, aqi: 194, dose_ug: 194 }, // exiting kiln, curving NE
-    { ts: NOW() - 16400, lat: 27.7148, lng: 85.3368, aqi: 172, dose_ug: 172 }, // Thimi main road, heading E
-    { ts: NOW() - 14400, lat: 27.7172, lng: 85.3448, aqi: 144, dose_ug: 144 }, // Madhyapur, continuing E
-    { ts: NOW() - 12600, lat: 27.7188, lng: 85.3528, aqi: 128, dose_ug: 128 }, // Bhaktapur road, almost there
-    { ts: NOW() - 10800, lat: 27.7195, lng: 85.3581, aqi: 121, dose_ug: 121 }, // workplace — far NE corner
-    { ts: NOW() -  9000, lat: 27.7178, lng: 85.3554, aqi: 133, dose_ug: 133 }, // lunch walk nearby
-    { ts: NOW() -  5400, lat: 27.7142, lng: 85.3441, aqi: 164, dose_ug: 164 }, // evening — heading back W
-    { ts: NOW() -  3200, lat: 27.7074, lng: 85.3261, aqi: 198, dose_ug: 198 }, // kiln road dusk (worst again)
-    { ts: NOW() -   900, lat: 27.6724, lng: 85.3142, aqi: 118, dose_ug: 118 }, // near home — tapering SW
+    { ts: NOW() - 28800, lat: 27.6601, lng: 85.3032, aqi:  72, dose_ug:  72 }, // Home — Lagankhel
+    { ts: NOW() - 27000, lat: 27.6724, lng: 85.3158, aqi: 108, dose_ug: 108 }, // Ekantakuna junction
+    { ts: NOW() - 25200, lat: 27.6884, lng: 85.3374, aqi: 152, dose_ug: 152 }, // Balkumari crossing
+    { ts: NOW() - 23400, lat: 27.6968, lng: 85.3358, aqi: 178, dose_ug: 178 }, // Koteshwor chowk
+    { ts: NOW() - 21600, lat: 27.7081, lng: 85.3248, aqi: 207, dose_ug: 207 }, // Kiln corridor — PEAK
+    { ts: NOW() - 18000, lat: 27.7148, lng: 85.3368, aqi: 158, dose_ug: 158 }, // Thimi main road
+    { ts: NOW() - 14400, lat: 27.7195, lng: 85.3581, aqi: 118, dose_ug: 118 }, // Workplace — Bhaktapur rd
+    { ts: NOW() - 10800, lat: 27.7178, lng: 85.3554, aqi: 131, dose_ug: 131 }, // Lunch walk
+    { ts: NOW() -  5400, lat: 27.7074, lng: 85.3261, aqi: 196, dose_ug: 196 }, // Evening · kiln road
+    { ts: NOW() -  1800, lat: 27.6724, lng: 85.3142, aqi:  98, dose_ug:  98 }, // Near home
   ],
-  total_dose_ug: 2611,
-  cigarette_equiv: 21.8,
-  avg_aqi: 158,
+  total_dose_ug: 1418,
+  cigarette_equiv: 11.8,
+  avg_aqi: 142,
 };
 
 // ─── 24-hour AQI cycle (full day with morning + evening peaks) ───────────────

@@ -1,0 +1,106 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+@theme inline {
+  /* ── Brand palette ── */
+  --color-ink:        #0a1a0f;
+  --color-ink-2:      #112217;
+  --color-ink-3:      #1a2f20;
+  --color-ink-deep:   #080f0a;
+  --color-sage:       #3d8b5e;
+  --color-sage-2:     #4fa870;
+  --color-sage-3:     #7dc99a;
+  --color-sage-4:     #a8dbb8;
+  --color-parchment:  #f2ede4;
+  --color-mist:       #c8d9cc;
+  --color-mist-2:     #8aad96;
+  --color-amber:      #d4a017;
+  --color-amber-2:    #f0bb2a;
+  --color-rust:       #c44b2b;
+  --color-rust-2:     #e05a38;
+  --color-orange:     #e8600a;
+  --color-purple:     #7b2d8b;
+  --color-crimson:    #7b0000;
+  --color-sky:        #2d7a9a;
+  --color-sky-2:      #3d9abf;
+  --color-sky-3:      #7cc4e0;
+  --color-rust-3:     #f08060;
+  --color-amber-3:    #f5d06a;
+  --color-text-2:     #8aad96;
+  --color-text-3:     #4d7a5e;
+  --color-text-4:     #2d5040;
+  --color-cream:      #e8f0ea;
+  --color-moss:       #1e4028;
+  --color-moss-2:     #2a5238;
+
+  /* ── AQI semantic colours (used by aqiColor()) ── */
+  --color-aqi-good:       #3d8b5e;
+  --color-aqi-moderate:   #d4a017;
+  --color-aqi-sensitive:  #e8600a;
+  --color-aqi-unhealthy:  #c44b2b;
+  --color-aqi-very:       #7b2d8b;
+  --color-aqi-hazardous:  #7b0000;
+
+  /* ── Fonts ── */
+  --font-display: var(--font-fraunces);
+  --font-body:    var(--font-instrument-sans);
+
+  /* ── Border tokens ── */
+  --border-sage:  rgba(61, 139, 94, 0.12);
+  --border-sage2: rgba(61, 139, 94, 0.24);
+  --border-sage3: rgba(61, 139, 94, 0.42);
+}
+
+/* ── Base ── */
+html {
+  background-color: #0a1a0f;
+  color: #f2ede4;
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  font-family: var(--font-body, "Instrument Sans", system-ui, sans-serif);
+}
+
+/* ── Custom scrollbar ── */
+::-webkit-scrollbar        { width: 4px; height: 4px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: #1a2f20; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #3d8b5e44; }
+
+/* ── Shared keyframes ── */
+@keyframes fadeUp   { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+@keyframes shimmer  { to { transform: translateX(200%); } }
+
+/* ── Utility: sage-tinted border ── */
+.border-sage-tint  { border-color: rgba(61, 139, 94, 0.12); }
+.border-sage-tint2 { border-color: rgba(61, 139, 94, 0.24); }
+
+/* ── Animate fadeUp helper ── */
+.animate-fade-up { animation: fadeUp 0.2s ease both; }
+
+/* ── Shimmer skeleton ── */
+@keyframes shimmer-slide {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    #1a2f20 25%,
+    #243d2a 50%,
+    #1a2f20 75%
+  );
+  background-size: 200% auto;
+  animation: shimmer-slide 1.5s ease infinite;
+}
+
+/* ── PA toast entrance ── */
+@keyframes toastPop {
+  0%   { opacity: 0; transform: translateX(-50%) scale(0.85) translateY(6px); }
+  60%  { transform: translateX(-50%) scale(1.04) translateY(-2px); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1)   translateY(0); }
+}
+.animate-toast-pop { animation: toastPop 0.28s cubic-bezier(.34,1.56,.64,1) both; }

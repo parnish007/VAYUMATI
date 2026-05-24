@@ -322,31 +322,30 @@ export const DEMO_SELFIES: MaskSelfie[] = [
 
 export const DEMO_PEOPLE_COUNT = 47000;
 
-// ─── Exposure timeline — full commute day across ~3km of Kathmandu Ward 11 ───
-// 18 GPS points: home (Gwarko/Balkumari) → ring road → kiln corridor (PEAK) →
-// Baneshwor workplace → evening return. Spread intentionally so Leaflet auto-fit
-// shows neighbourhood-scale context instead of zooming to a single block.
+// ─── Exposure timeline — Patan south → Thimi/Bhaktapur corridor (~7 km) ─────
+// 18 GPS points spanning Lagankhel (south) to Bhaktapur road (northeast).
+// Wide diagonal so Leaflet auto-fit fills the whole screen with valley context.
 export const DEMO_EXPOSURE_REPORT: ExposureReport = {
   date: new Date().toISOString().slice(0, 10),
   points: [
-    { ts: NOW() - 28800, lat: 27.6945, lng: 85.3048, aqi:  72, dose_ug:  72 }, // 8h ago — home, quiet lane
-    { ts: NOW() - 27600, lat: 27.6968, lng: 85.3082, aqi:  88, dose_ug:  88 }, // walking to bus stop
-    { ts: NOW() - 27000, lat: 27.6994, lng: 85.3124, aqi: 114, dose_ug: 114 }, // main road bus stop
-    { ts: NOW() - 26200, lat: 27.7022, lng: 85.3165, aqi: 141, dose_ug: 141 }, // Koteshwor junction
-    { ts: NOW() - 25200, lat: 27.7048, lng: 85.3202, aqi: 163, dose_ug: 163 }, // ring road crossing
-    { ts: NOW() - 23800, lat: 27.7071, lng: 85.3238, aqi: 181, dose_ug: 181 }, // brick kiln road entry
-    { ts: NOW() - 22200, lat: 27.7092, lng: 85.3272, aqi: 207, dose_ug: 207 }, // kiln cluster — AQI peak
-    { ts: NOW() - 20400, lat: 27.7108, lng: 85.3308, aqi: 193, dose_ug: 193 }, // Thimi chowk east
-    { ts: NOW() - 18600, lat: 27.7121, lng: 85.3335, aqi: 174, dose_ug: 174 }, // diesel bus stand
-    { ts: NOW() - 16800, lat: 27.7135, lng: 85.3358, aqi: 156, dose_ug: 156 }, // approaching Baneshwor
-    { ts: NOW() - 14400, lat: 27.7148, lng: 85.3382, aqi: 138, dose_ug: 138 }, // workplace arrival
-    { ts: NOW() - 10800, lat: 27.7148, lng: 85.3382, aqi: 124, dose_ug: 124 }, // workplace (indoors)
-    { ts: NOW() -  9200, lat: 27.7138, lng: 85.3364, aqi: 137, dose_ug: 137 }, // lunch walk
-    { ts: NOW() -  7200, lat: 27.7148, lng: 85.3382, aqi: 121, dose_ug: 121 }, // back to office
-    { ts: NOW() -  5400, lat: 27.7118, lng: 85.3328, aqi: 162, dose_ug: 162 }, // evening commute — diesel jam
-    { ts: NOW() -  3600, lat: 27.7088, lng: 85.3265, aqi: 198, dose_ug: 198 }, // kiln road again (worse at dusk)
-    { ts: NOW() -  2100, lat: 27.7055, lng: 85.3215, aqi: 172, dose_ug: 172 }, // ring road evening
-    { ts: NOW() -   600, lat: 27.6978, lng: 85.3104, aqi: 118, dose_ug: 118 }, // near home — tapering
+    { ts: NOW() - 28800, lat: 27.6612, lng: 85.3012, aqi:  72, dose_ug:  72 }, // home — Lagankhel, Patan
+    { ts: NOW() - 27600, lat: 27.6684, lng: 85.3058, aqi:  85, dose_ug:  85 }, // Jawalakhel chowk
+    { ts: NOW() - 27000, lat: 27.6751, lng: 85.3102, aqi: 108, dose_ug: 108 }, // Satdobato junction
+    { ts: NOW() - 26200, lat: 27.6832, lng: 85.3148, aqi: 131, dose_ug: 131 }, // Ekantakuna ring road
+    { ts: NOW() - 25200, lat: 27.6908, lng: 85.3194, aqi: 155, dose_ug: 155 }, // Balkumari crossing
+    { ts: NOW() - 23800, lat: 27.6975, lng: 85.3248, aqi: 174, dose_ug: 174 }, // Koteshwor east
+    { ts: NOW() - 22200, lat: 27.7044, lng: 85.3312, aqi: 207, dose_ug: 207 }, // kiln cluster — AQI PEAK
+    { ts: NOW() - 20400, lat: 27.7098, lng: 85.3368, aqi: 196, dose_ug: 196 }, // Thimi chowk north
+    { ts: NOW() - 18600, lat: 27.7142, lng: 85.3415, aqi: 178, dose_ug: 178 }, // diesel bus corridor
+    { ts: NOW() - 16800, lat: 27.7188, lng: 85.3461, aqi: 156, dose_ug: 156 }, // Madhyapur outer ring
+    { ts: NOW() - 14400, lat: 27.7228, lng: 85.3502, aqi: 138, dose_ug: 138 }, // workplace — Bhaktapur road
+    { ts: NOW() - 10800, lat: 27.7228, lng: 85.3502, aqi: 122, dose_ug: 122 }, // workplace (indoors)
+    { ts: NOW() -  9200, lat: 27.7211, lng: 85.3485, aqi: 134, dose_ug: 134 }, // lunch walk
+    { ts: NOW() -  7200, lat: 27.7228, lng: 85.3502, aqi: 119, dose_ug: 119 }, // back to desk
+    { ts: NOW() -  5400, lat: 27.7165, lng: 85.3448, aqi: 168, dose_ug: 168 }, // evening commute start
+    { ts: NOW() -  3600, lat: 27.7058, lng: 85.3335, aqi: 201, dose_ug: 201 }, // kiln road dusk (worst)
+    { ts: NOW() -  2100, lat: 27.6918, lng: 85.3218, aqi: 176, dose_ug: 176 }, // ring road homebound
+    { ts: NOW() -   600, lat: 27.6698, lng: 85.3072, aqi: 112, dose_ug: 112 }, // near home — tapering
   ],
   total_dose_ug: 2611,
   cigarette_equiv: 21.8,

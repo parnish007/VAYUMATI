@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
-import { useRouter } from "next/navigation";
 import type { AuthUser } from "@/types";
 export type { AuthUser } from "@/types";
 
@@ -26,7 +25,6 @@ const AuthContext = createContext<AuthContextValue>({
 import { getBackendUrl } from "./constants";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const router = useRouter();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -80,10 +78,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   function logout() {
     localStorage.removeItem("vayu_jwt");
     localStorage.removeItem("vayu_role");
-    localStorage.setItem("vayu_demo", "true");
+    localStorage.removeItem("vayu_demo");
     setToken(null);
     setUser(null);
-    router.push("/login");
+    // Hard redirect: clears SWR cache, DemoContext state, and all React state
+    // so the next session starts completely fresh. router.push() leaves stale
+    // context alive and allows the back button to momentarily re-show the
+    // authenticated dashboard.
+    window.location.href = "/login";
   }
 
   return (

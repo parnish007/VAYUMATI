@@ -407,7 +407,7 @@ export const DEMO_CARBON_LEDGER_BY_ROLE: Record<UserRole, CarbonLedger> = {
       { id: "c3", user_id: "u-ram", ward_id: "11", ts: NOW() - 172800, kind: "tree_planted", co2e_kg:  21, npr_value: 72, evidence_kind: "diary", evidence_ref: "d5" },
     ],
     next_payout_kg: 100,
-    cohort_opens: "2025-12-15",
+    cohort_opens: "2026-09-01",
   },
   individual: {
     user_id: "u-anisha",
@@ -426,7 +426,7 @@ export const DEMO_CARBON_LEDGER_BY_ROLE: Record<UserRole, CarbonLedger> = {
       { id: "c2", user_id: "u-anisha", ward_id: "11", ts: NOW() - 86400, kind: "cookstove_switch", co2e_kg: 4.2,  npr_value: 14, evidence_kind: "selfie",          evidence_ref: "s-1"  },
     ],
     next_payout_kg: 100,
-    cohort_opens: "2025-12-15",
+    cohort_opens: "2026-09-01",
   },
   executive: {
     user_id: "u-exec",
@@ -442,7 +442,7 @@ export const DEMO_CARBON_LEDGER_BY_ROLE: Record<UserRole, CarbonLedger> = {
     },
     recent: [],
     next_payout_kg: 200,
-    cohort_opens: "2025-12-15",
+    cohort_opens: "2026-09-01",
   },
 };
 

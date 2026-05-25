@@ -1840,13 +1840,26 @@ export default function CommunityPage() {
   return (
     <div className="flex flex-col gap-4 max-w-2xl mx-auto animate-fade-up pb-4">
       <div className="flex items-start justify-between gap-2">
-        <div>
+        <div className="flex-1 min-w-0">
           <h1 className="font-display text-2xl font-semibold text-parchment">Community</h1>
-          {isDemo && (
-            <p className="text-[11px] mt-0.5" style={{ color: "#4d7a5e" }}>
-              {identity.icon} {identity.name} · Ward {WARD_ID}
-            </p>
-          )}
+          <div className="flex items-center gap-2 mt-1 flex-wrap">
+            {isDemo && (
+              <span className="text-[11px]" style={{ color: "#4d7a5e" }}>
+                {identity.icon} {identity.name}
+              </span>
+            )}
+            <span className="text-[11px]" style={{ color: "#2d5040" }}>·</span>
+            <span className="text-[11px]" style={{ color: "#4d7a5e" }}>Ward {WARD_ID}</span>
+            {air && (
+              <>
+                <span className="text-[11px]" style={{ color: "#2d5040" }}>·</span>
+                <span className="flex items-center gap-1 text-[11px] font-semibold tabular-nums" style={{ color: aqiColor(air.aqi) }}>
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: aqiColor(air.aqi) }} />
+                  AQI {air.aqi}
+                </span>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -1906,48 +1919,58 @@ export default function CommunityPage() {
 
           {/* Compliance banner */}
           <div
-            className="rounded-2xl px-4 py-3 flex items-center gap-4"
+            className="rounded-2xl px-4 py-3 flex items-center gap-4 relative overflow-hidden"
             style={{
               background: compliancePct >= 30
-                ? "linear-gradient(135deg,rgba(79,168,112,0.14),rgba(61,139,94,0.07))"
+                ? "linear-gradient(135deg, rgba(79,168,112,0.16), rgba(61,139,94,0.07))"
                 : "rgba(255,255,255,0.03)",
               border: compliancePct >= 30
-                ? "1px solid rgba(79,168,112,0.3)"
+                ? "1px solid rgba(79,168,112,0.32)"
                 : "1px solid rgba(61,139,94,0.12)",
-              boxShadow: compliancePct >= 30 ? "0 0 24px rgba(79,168,112,0.1)" : "none",
+              boxShadow: compliancePct >= 30 ? "0 0 28px rgba(79,168,112,0.12)" : "none",
             }}
           >
-            <div className="flex flex-col items-center shrink-0" style={{ minWidth: 52 }}>
+            {compliancePct >= 30 && (
+              <div className="absolute -right-4 -top-4 w-20 h-20 rounded-full pointer-events-none"
+                style={{ background: "radial-gradient(circle, rgba(79,168,112,0.18), transparent 70%)" }} />
+            )}
+            <div className="flex flex-col items-center shrink-0" style={{ minWidth: 56 }}>
               <span
-                className="font-display font-bold leading-none"
-                style={{ fontSize: 28, color: compliancePct >= 30 ? "#4fa870" : "#7dc99a" }}
+                className="font-display font-black leading-none tabular-nums"
+                style={{ fontSize: 32, color: compliancePct >= 30 ? "#4fa870" : "#7dc99a", letterSpacing: "-1px" }}
               >
                 {compliancePct}%
               </span>
-              <span className="text-[9px] mt-0.5 font-semibold uppercase tracking-[0.6px]" style={{ color: "#4d7a5e" }}>
+              <span className="text-[9px] mt-0.5 font-bold uppercase tracking-[0.8px]" style={{ color: "#4d7a5e" }}>
                 masked
               </span>
             </div>
-            <div className="flex-1 flex flex-col gap-1.5">
-              <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(0,0,0,0.35)" }}>
-                <div
-                  className="h-full rounded-full transition-all duration-700"
-                  style={{
-                    width: `${compliancePct}%`,
-                    background: compliancePct >= 30
-                      ? "linear-gradient(90deg,#3d8b5e,#4fa870,#7dc99a)"
-                      : "linear-gradient(90deg,#2d5040,#3d8b5e)",
-                  }}
-                />
+            <div className="flex-1 flex flex-col gap-2">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                {/* Segmented tipping-point bar */}
+                <div className="flex-1 flex gap-0.5 h-2 rounded-full overflow-hidden">
+                  {Array.from({ length: 10 }, (_, i) => {
+                    const seg = (i + 1) * 10;
+                    const filled = compliancePct >= seg;
+                    const isThreshold = seg === 30;
+                    return (
+                      <div key={i} className="flex-1 h-full rounded-sm"
+                        style={{
+                          background: filled
+                            ? (compliancePct >= 30 ? `rgba(79,168,112,${0.5 + (i * 0.05)})` : `rgba(61,139,94,0.4)`)
+                            : "rgba(0,0,0,0.35)",
+                          outline: isThreshold ? "1px solid rgba(79,168,112,0.35)" : "none",
+                        }} />
+                    );
+                  })}
+                </div>
+                <span className="text-[9px] font-mono shrink-0" style={{ color: "#2d5040" }}>30%</span>
               </div>
-              <p className="text-[10px]" style={{ color: compliancePct >= 30 ? "#7dc99a" : "#4d7a5e" }}>
+              <p className="text-[10px] leading-relaxed" style={{ color: compliancePct >= 30 ? "#7dc99a" : "#4d7a5e" }}>
                 {compliancePct >= 30
-                  ? "🌟 Social proof threshold reached — neighbors seeing neighbors act"
-                  : `${30 - compliancePct}% more needed to hit the social proof tipping point`}
+                  ? "Social proof threshold reached — neighbors seeing neighbors act"
+                  : `${30 - compliancePct}% more needed to reach the social tipping point`}
               </p>
-            </div>
-            <div className="shrink-0 flex flex-col items-center">
-              <span className="text-2xl">{compliancePct >= 30 ? "✅" : "😷"}</span>
             </div>
           </div>
 
@@ -1984,20 +2007,19 @@ export default function CommunityPage() {
                       style={{
                         aspectRatio: "3/4",
                         border: s.approved
-                          ? "1.5px solid rgba(79,168,112,0.5)"
+                          ? "1.5px solid rgba(79,168,112,0.55)"
                           : "1.5px solid rgba(255,255,255,0.07)",
-                        boxShadow: s.approved ? "0 0 12px rgba(79,168,112,0.15)" : "none",
+                        boxShadow: s.approved
+                          ? "0 4px 18px rgba(0,0,0,0.55), 0 0 14px rgba(79,168,112,0.14), inset 0 0 0 1px rgba(255,255,255,0.06)"
+                          : "0 4px 14px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.04)",
                       }}
                     >
                       {/* Fallback avatar — always rendered, image sits on top */}
                       <div
-                        className="absolute inset-0 flex items-center justify-center font-display font-bold text-white text-xl"
-                        style={{ background: GRAD_PALETTES[idx % GRAD_PALETTES.length] }}
+                        className="absolute inset-0 flex items-center justify-center font-display font-bold text-white text-2xl"
+                        style={{ background: GRAD_PALETTES[idx % GRAD_PALETTES.length], textShadow: "0 2px 8px rgba(0,0,0,0.4)" }}
                       >
                         {initials(s.name)}
-                        {s.approved && (
-                          <span className="absolute bottom-6 text-2xl">😷</span>
-                        )}
                       </div>
                       {/* Real photo — hides itself if file not found */}
                       {s.image_url && (
@@ -2026,25 +2048,25 @@ export default function CommunityPage() {
                         </p>
                       </div>
 
-                      {/* Verified badge */}
+                      {/* Verified stamp */}
                       {s.approved ? (
                         <div
-                          className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-[10px]"
+                          className="absolute top-0 inset-x-0 flex items-center justify-center gap-1 py-1"
                           style={{
-                            background: "rgba(79,168,112,0.9)",
-                            border: "1px solid rgba(255,255,255,0.2)",
+                            background: "linear-gradient(to bottom, rgba(79,168,112,0.80), rgba(61,139,94,0.55))",
+                            backdropFilter: "blur(2px)",
                           }}
                           title="Mask verified by MATI Vision"
                         >
-                          ✓
+                          <span className="text-[8px] font-bold uppercase tracking-[1px] text-white">✓ MATI verified</span>
                         </div>
                       ) : (
                         <div
                           className="absolute inset-0 flex items-center justify-center"
-                          style={{ background: "rgba(0,0,0,0.5)" }}
+                          style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(1px)" }}
                         >
-                          <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
-                            style={{ background: "rgba(196,75,43,0.8)", color: "#fff" }}>
+                          <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold"
+                            style={{ background: "rgba(196,75,43,0.85)", color: "#fff", border: "1px solid rgba(255,255,255,0.15)" }}>
                             No mask
                           </span>
                         </div>
@@ -2333,42 +2355,60 @@ export default function CommunityPage() {
               </div>
             ) : (
               <div className="flex flex-col">
-                {leaderboard.map((entry, idx) => {
-                  const isMyWard = entry.ward_id === WARD_ID;
-                  return (
-                    <div
-                      key={entry.ward_id}
-                      className="flex items-center gap-3 px-4 py-3"
-                      style={{
-                        borderTop: idx > 0 ? "1px solid rgba(61,139,94,0.06)" : undefined,
-                        background: isMyWard ? "rgba(212,160,23,0.06)" : undefined,
-                      }}
-                    >
-                      <LeaderboardRank rank={entry.rank} isHighlighted={isMyWard} />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <p className="text-sm font-medium truncate"
-                            style={{ color: isMyWard ? "#f0bb2a" : "#c8ddd0" }}>
-                            {entry.name}
-                          </p>
-                          <RankDelta delta={entry.delta} />
+                {(() => {
+                  const maxScore = Math.max(...leaderboard.map((e) => e.score));
+                  const maxPa = Math.max(...leaderboard.map((e) => e.pa_actions));
+                  const rankBorderColor: Record<number, string> = { 1: "#d4a017", 2: "#9ca3af", 3: "#cd7c2f" };
+                  return leaderboard.map((entry, idx) => {
+                    const isMyWard = entry.ward_id === WARD_ID;
+                    const border = rankBorderColor[entry.rank] ?? "transparent";
+                    const isTop = entry.rank === 1;
+                    return (
+                      <div
+                        key={entry.ward_id}
+                        className="flex items-center gap-3 px-4 py-3"
+                        style={{
+                          borderTop: idx > 0 ? "1px solid rgba(61,139,94,0.06)" : undefined,
+                          borderLeft: `3px solid ${border}`,
+                          background: isTop
+                            ? "linear-gradient(90deg, rgba(212,160,23,0.14), transparent 70%)"
+                            : isMyWard
+                            ? "rgba(212,160,23,0.06)"
+                            : undefined,
+                        }}
+                      >
+                        <LeaderboardRank rank={entry.rank} isHighlighted={isMyWard || isTop} />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <p className="text-sm font-medium truncate"
+                              style={{ color: isTop ? "#f0bb2a" : isMyWard ? "#f0bb2a" : "#c8ddd0" }}>
+                              {entry.name}
+                            </p>
+                            <RankDelta delta={entry.delta} />
+                          </div>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: "rgba(0,0,0,0.3)", maxWidth: 80 }}>
+                              <div className="h-full rounded-full"
+                                style={{ width: `${Math.round((entry.pa_actions / maxPa) * 100)}%`, background: isTop ? "#d4a017" : "rgba(61,139,94,0.55)" }} />
+                            </div>
+                            <p className="text-[10px]" style={{ color: "#4d7a5e" }}>
+                              {entry.pa_actions} PA
+                            </p>
+                          </div>
                         </div>
-                        <p className="text-[10px]" style={{ color: "#4d7a5e" }}>
-                          {entry.pa_actions} PA actions
-                        </p>
+                        <div className="flex flex-col items-end shrink-0">
+                          <span className="font-display font-bold tabular-nums"
+                            style={{ fontSize: 16, color: isTop ? "#f0bb2a" : isMyWard ? "#f0bb2a" : "#7dc99a" }}>
+                            {entry.score}
+                          </span>
+                          <span className="text-[10px]" style={{ color: aqiColor(entry.aqi) }}>
+                            AQI {entry.aqi}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex flex-col items-end shrink-0">
-                        <span className="text-sm font-bold font-display"
-                          style={{ color: isMyWard ? "#f0bb2a" : "#7dc99a" }}>
-                          {entry.score}
-                        </span>
-                        <span className="text-[10px]" style={{ color: aqiColor(entry.aqi) }}>
-                          AQI {entry.aqi}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  });
+                })()}
                 <div className="px-4 py-2.5"
                   style={{ borderTop: "1px solid rgba(61,139,94,0.08)", background: "rgba(0,0,0,0.15)" }}>
                   <p className="text-[9px]" style={{ color: "#2d5040" }}>

@@ -192,7 +192,11 @@ export default function DashboardPage() {
         {air && (
           <div
             className="rounded-2xl p-4 flex items-center justify-between"
-            style={{ background: `linear-gradient(135deg, ${color}1a, ${color}0a)`, border: `1px solid ${color}38` }}
+            style={{
+              background: `radial-gradient(ellipse at 20% 50%, ${color}26 0%, transparent 60%), linear-gradient(135deg, ${color}14, ${color}06)`,
+              border: `1px solid ${color}50`,
+              boxShadow: `0 0 32px ${color}12`,
+            }}
           >
             <div>
               <p className="text-[10px] uppercase tracking-[0.5px] mb-1" style={{ color: `${color}99` }}>Air Quality Index</p>
@@ -219,14 +223,20 @@ export default function DashboardPage() {
         {/* Risk row */}
         {air && (
           <div className="grid grid-cols-2 gap-2">
-            <div className="rounded-2xl p-3" style={{ background: "#112217", border: "1px solid rgba(61,139,94,0.18)" }}>
-              <p className="text-[10px] uppercase tracking-[0.5px] mb-1.5" style={{ color: "#8aad96" }}>≈ Cigarettes/day</p>
+            <div className="rounded-2xl p-3 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, rgba(224,90,56,0.14), rgba(196,75,43,0.06))", border: "1px solid rgba(196,75,43,0.28)" }}>
+              <div className="absolute -right-2 -top-2 w-12 h-12 rounded-full pointer-events-none"
+                style={{ background: "radial-gradient(circle, rgba(224,90,56,0.22), transparent 70%)" }} />
+              <p className="text-[10px] uppercase tracking-[0.5px] mb-1.5" style={{ color: "#e05a38" }}>≈ Cigarettes/day</p>
               <p className="font-display text-2xl font-black" style={{ color: "#e05a38" }}>~{cigs}</p>
-              <p className="text-[10px] mt-0.5" style={{ color: "#4d7a5e" }}>at this AQI, 16h exposure</p>
+              <p className="text-[10px] mt-0.5" style={{ color: "#8a4030" }}>at this AQI, 16h exposure</p>
             </div>
-            <div className="rounded-2xl p-3" style={{ background: "#112217", border: "1px solid rgba(61,139,94,0.18)" }}>
+            <div className="rounded-2xl p-3 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, rgba(17,34,23,0.9), rgba(26,47,32,0.7))", border: `1px solid ${color}2a` }}>
+              <div className="absolute -right-2 -top-2 w-12 h-12 rounded-full pointer-events-none"
+                style={{ background: `radial-gradient(circle, ${color}18, transparent 70%)` }} />
               <p className="text-[10px] uppercase tracking-[0.5px] mb-1.5" style={{ color: "#8aad96" }}>PM2.5 live</p>
-              <p className="font-display text-2xl font-black text-amber-2">{(air.pm25 ?? 0).toFixed(1)}</p>
+              <p className="font-display text-2xl font-black tabular-nums" style={{ color }}>{(air.pm25 ?? 0).toFixed(1)}</p>
               <p className="text-[10px] mt-0.5" style={{ color: "#4d7a5e" }}>μg/m³ · {timeAgo(air.ts)}</p>
             </div>
           </div>

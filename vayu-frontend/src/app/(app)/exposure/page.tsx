@@ -254,7 +254,7 @@ export default function ExposurePage() {
           fontWeight: isLive ? 700 : 400,
           color: isLive ? "#4fa870" : "#4d7a5e",
         }}>
-          {isLive ? "● Live" : `${historyPoints.length - 1 - currentHistIdx} steps before now`}
+          {isLive ? "● Live" : `${Math.round((historyPoints.length - 1 - currentHistIdx) * 5 / 60)}h ago`}
         </span>
       </div>
       <div style={{ position: "relative" }}>
@@ -307,8 +307,9 @@ export default function ExposurePage() {
               />
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center gap-3" style={{ background: "#05100a" }}>
-                <Navigation className="w-7 h-7" style={{ color: "#2d5040" }} />
-                <p className="text-xs" style={{ color: "#4d7a5e" }}>No route logged yet. Start tracking below.</p>
+                <Navigation className="w-8 h-8" style={{ color: "#3d8b5e" }} />
+                <p className="text-sm font-semibold" style={{ color: "#7dc99a" }}>Track your commute</p>
+                <p className="text-xs text-center max-w-[200px]" style={{ color: "#4d7a5e" }}>Every stop records your AQI exposure. Start tracking below.</p>
               </div>
             )
           ) : (
@@ -468,11 +469,11 @@ export default function ExposurePage() {
         return (
           <div className="md:hidden w-full flex flex-col" style={{ background: "#030e07" }}>
             <div className="flex items-center justify-between px-4 pt-2 pb-0.5">
-              <span className="text-[9px] uppercase tracking-[1.2px]" style={{ color: "#1e3828" }}>
+              <span className="text-[10px] uppercase tracking-[1.2px] font-semibold" style={{ color: "#4d7a5e" }}>
                 Route · {mapPoints.length} stops
               </span>
-              <span className="text-[9px] tabular-nums" style={{ color: aqiColor(peakPt.aqi) }}>
-                peak {peakPt.aqi}
+              <span className="text-[10px] font-bold tabular-nums" style={{ color: aqiColor(peakPt.aqi) }}>
+                Peak AQI {peakPt.aqi}
               </span>
             </div>
             <div className="flex items-end gap-px h-9 px-1 pb-1">
@@ -512,13 +513,13 @@ export default function ExposurePage() {
             >
               <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(196,75,43,0.20), transparent 70%)" }} />
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] uppercase tracking-[0.8px] mb-1" style={{ color: "#c44b2b" }}>Today's dose</p>
-                <p className="font-display text-3xl font-black tabular-nums leading-none" style={{ color: "#f0bb2a" }}>
+                <p className="text-[11px] uppercase tracking-[0.8px] mb-1 font-bold" style={{ color: "#c44b2b" }}>Today&apos;s Dose</p>
+                <p className="font-display text-4xl font-black tabular-nums leading-none" style={{ color: "#f0bb2a" }}>
                   {totalDose.toFixed(0)}
                   <span className="text-sm font-normal ml-1" style={{ color: "#8aad96" }}>μg·min</span>
                 </p>
-                <p className="text-xs mt-1.5" style={{ color: "#e05a38" }}>
-                  ≡ <strong className="tabular-nums">{cigs}</strong> cigarettes inhaled
+                <p className="text-sm mt-1.5 font-semibold" style={{ color: "#e05a38" }}>
+                  ≡ <strong className="tabular-nums">{cigs}</strong> cigarette equiv. inhaled
                 </p>
               </div>
             </div>
@@ -542,7 +543,7 @@ export default function ExposurePage() {
                     {formatTime(peak.startTs)} – {formatTime(peak.endTs)}
                     <span className="ml-2 font-normal tabular-nums" style={{ color: aqiColor(peak.aqi) }}>AQI {peak.aqi}</span>
                   </p>
-                  <p className="text-[10px]" style={{ color: "#8aad96" }}>Avoid this window tomorrow — take the bypass.</p>
+                  <p className="text-[11px] font-medium" style={{ color: "#8aad96" }}>Wear N95 or take the bypass route tomorrow.</p>
                 </div>
               </div>
             )}
@@ -556,7 +557,7 @@ export default function ExposurePage() {
                 : { background: "linear-gradient(135deg,#3d8b5e,#4fa870)", color: "#0a1a0f", boxShadow: "0 6px 20px rgba(79,168,112,0.30)" }}
             >
               {tracking ? <Square className="w-4 h-4" /> : <Play className="w-4 h-4 fill-current" />}
-              {tracking ? "Stop tracking" : "Start live tracking"}
+              {tracking ? "Stop tracking" : "Start tracking my commute"}
             </button>
 
             {tracking && (
@@ -576,7 +577,7 @@ export default function ExposurePage() {
               <Card className="flex flex-col gap-2.5 mt-1">
                 <div className="flex items-center gap-2">
                   <Wind className="w-3.5 h-3.5" style={{ color: "#7dc99a" }} />
-                  <h2 className="font-semibold text-parchment text-sm flex-1">Route segments</h2>
+                  <h2 className="font-bold text-parchment text-sm flex-1">Exposure by Waypoint</h2>
                   <span className="text-[10px]" style={{ color: "#4d7a5e" }}>{mapPoints.length} stops</span>
                 </div>
                 <div className="flex flex-col gap-1.5">
@@ -619,7 +620,7 @@ export default function ExposurePage() {
               <Card className="flex flex-col gap-3">
                 <div className="flex items-center gap-2">
                   <TrendingUp className="w-3.5 h-3.5" style={{ color: "#7dc99a" }} />
-                  <h2 className="font-semibold text-parchment text-sm">7-day AQI history</h2>
+                  <h2 className="font-bold text-parchment text-sm">7-Day AQI Trend</h2>
                 </div>
                 <WeeklyChart days={DEMO_WEEKLY} />
               </Card>

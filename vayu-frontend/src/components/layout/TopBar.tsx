@@ -8,19 +8,30 @@ import { DemoToggle } from "@/components/ui/DemoToggle";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { useAuth } from "@/lib/authContext";
 
-// Fullscreen is a user-triggered gesture — cannot call requestFullscreen outside a click handler
+// Fullscreen helper with webkit prefix for Safari and iOS PWA
 function useFullscreen() {
   const [isFs, setIsFs] = useState(false);
   useEffect(() => {
-    const h = () => setIsFs(!!document.fullscreenElement);
+    const h = () => setIsFs(!!(
+      document.fullscreenElement ||
+      (document as any).webkitFullscreenElement
+    ));
     document.addEventListener("fullscreenchange", h);
-    return () => document.removeEventListener("fullscreenchange", h);
+    document.addEventListener("webkitfullscreenchange", h);
+    return () => {
+      document.removeEventListener("fullscreenchange", h);
+      document.removeEventListener("webkitfullscreenchange", h);
+    };
   }, []);
   const toggle = useCallback(() => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen?.().catch(() => null);
+    const el = document.documentElement;
+    const inFs = !!(document.fullscreenElement || (document as any).webkitFullscreenElement);
+    if (!inFs) {
+      const req = el.requestFullscreen?.bind(el) ?? (el as any).webkitRequestFullscreen?.bind(el);
+      req?.()?.catch?.(() => null);
     } else {
-      document.exitFullscreen?.().catch(() => null);
+      const exit = document.exitFullscreen?.bind(document) ?? (document as any).webkitExitFullscreen?.bind(document);
+      exit?.()?.catch?.(() => null);
     }
   }, []);
   return { isFs, toggle };

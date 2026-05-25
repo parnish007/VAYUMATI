@@ -116,12 +116,10 @@ export default function RewardsPage() {
     <div className="flex flex-col gap-5 max-w-xl mx-auto animate-fade-up pb-4">
       <div className="flex items-start justify-between gap-2">
         <div>
-          <h1 className="font-display text-2xl font-semibold text-parchment">Rewards</h1>
-          {isDemo && (
-            <p className="text-[11px] mt-0.5" style={{ color: "#4d7a5e" }}>
-              {identity.icon} {identity.name} · {identity.label}
-            </p>
-          )}
+          <h1 className="font-display text-2xl font-bold text-parchment">Rewards</h1>
+          <p className="text-xs mt-0.5 font-medium" style={{ color: "#4d7a5e" }}>
+            {isDemo ? `${identity.icon} ${identity.name} · ` : ""}{identity.label} · Ward {WARD_ID}
+          </p>
         </div>
       </div>
 
@@ -189,10 +187,10 @@ export default function RewardsPage() {
 
           {/* Certificate header */}
           <div className="pt-6 px-7 text-center">
-            <p style={{ fontFamily: "var(--font-bond-mono)", fontSize: 8, letterSpacing: "2.2px", color: "#6b4f1e", textTransform: "uppercase", opacity: 0.75 }}>
+            <p style={{ fontFamily: "var(--font-bond-mono)", fontSize: 10, letterSpacing: "2.2px", color: "#6b4f1e", textTransform: "uppercase", opacity: 0.85 }}>
               Carbon Removal Certificate
             </p>
-            <p style={{ fontFamily: "var(--font-bond-display)", fontSize: 26, color: "#2d1e06", lineHeight: 1.1, marginTop: 4 }}>
+            <p style={{ fontFamily: "var(--font-bond-display)", fontSize: 30, color: "#2d1e06", lineHeight: 1.1, marginTop: 4 }}>
               Soil Bond
             </p>
             <p style={{ fontFamily: "var(--font-bond-text)", fontSize: 12, fontStyle: "italic", color: "#8a6a2c", marginTop: 3 }}>
@@ -285,8 +283,8 @@ export default function RewardsPage() {
           style={{ background: `radial-gradient(ellipse at 50% 0%, ${tier.color}18 0%, transparent 70%)` }} />
 
         {/* Ladder label — distinguishes from gold */}
-        <span className="text-[9px] font-bold uppercase tracking-[1.4px]" style={{ color: "#9ca3af" }}>
-          ◇ Silver Ladder · Protective Action
+        <span className="text-[11px] font-bold uppercase tracking-[1.2px]" style={{ color: "#7dc99a" }}>
+          Protective Action Score
         </span>
 
         {/* Tier badge */}
@@ -307,10 +305,10 @@ export default function RewardsPage() {
                 strokeDasharray={circ} strokeDashoffset={dashOff}
                 transform={`rotate(-90 ${SIZE/2} ${SIZE/2})`}
                 style={{ transition: "stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)" }} />
-              <text x={SIZE/2} y={SIZE/2 - 8} textAnchor="middle" dominantBaseline="central"
-                fontSize="36" fontWeight="900" fill={tier.color} fontFamily="var(--font-display, serif)">{score}</text>
+              <text x={SIZE/2} y={SIZE/2 - 10} textAnchor="middle" dominantBaseline="central"
+                fontSize="40" fontWeight="900" fill={tier.color} fontFamily="var(--font-display, serif)">{score}</text>
               <text x={SIZE/2} y={SIZE/2 + 18} textAnchor="middle" dominantBaseline="central"
-                fontSize="9" fill="#4d7a5e" fontFamily="var(--font-body, sans-serif)" letterSpacing="1.2">PA SCORE</text>
+                fontSize="11" fill="#7dc99a" fontFamily="var(--font-body, sans-serif)" letterSpacing="1" fontWeight="600">PA SCORE</text>
             </svg>
           </div>
         )}
@@ -318,14 +316,14 @@ export default function RewardsPage() {
         {/* Social framing */}
         <div className="flex flex-col items-center gap-1.5">
           {rank != null && (
-            <div className="flex items-center gap-2 rounded-full px-4 py-1.5 text-xs"
-              style={{ background: "rgba(61,139,94,0.08)", border: "1px solid rgba(61,139,94,0.22)", color: "#6dc48d" }}>
-              You are <strong className="text-parchment font-display text-sm mx-1">#{rank}</strong> in Ward {WARD_ID}
-              {topPct !== null && <span className="ml-1 opacity-70">· top {topPct}%</span>}
+            <div className="flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold"
+              style={{ background: "rgba(61,139,94,0.10)", border: "1px solid rgba(61,139,94,0.30)", color: "#6dc48d" }}>
+              You are <strong className="text-parchment font-display text-base mx-1">#{rank}</strong> in Ward {WARD_ID}
+              {topPct !== null && <span className="ml-1" style={{ color: "#4fa870" }}>· top {topPct}%</span>}
             </div>
           )}
-          <p className="text-[10px] text-mist text-center">
-            Protective Action Score · max 100 pts/week
+          <p className="text-xs text-mist text-center">
+            Max 100 pts/week · resets Monday Nepal time
           </p>
         </div>
       </Card>
@@ -334,27 +332,30 @@ export default function RewardsPage() {
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-2xl p-4 flex flex-col gap-2"
           style={{ background: "linear-gradient(135deg, rgba(212,160,23,0.12), rgba(232,96,10,0.08))", border: "1px solid rgba(212,160,23,0.25)" }}>
-          <p className="text-[10px] uppercase tracking-[1px] inline-flex items-center gap-1.5" style={{ color: "#d4a017" }}>
-            <Flame className="w-3 h-3" /> Streak
+          <p className="text-[11px] uppercase tracking-[1px] font-bold inline-flex items-center gap-1.5" style={{ color: "#d4a017" }}>
+            <Flame className="w-3.5 h-3.5" /> Streak
           </p>
-          <p className="font-display text-3xl font-black text-parchment">{DEMO_STREAK}</p>
-          <p className="text-[10px]" style={{ color: "#8aad96" }}>days in a row — keep it up</p>
+          <div className="flex items-baseline gap-1.5">
+            <p className="font-display text-4xl font-black text-parchment">{DEMO_STREAK}</p>
+            <span className="text-sm font-semibold" style={{ color: "#d4a017" }}>days</span>
+          </div>
+          <p className="text-xs font-medium" style={{ color: "#8aad96" }}>consecutive — keep it up</p>
         </div>
         <div className="rounded-2xl p-4 flex flex-col gap-2"
           style={{ background: "rgba(30,64,40,0.5)", border: "1px solid rgba(61,139,94,0.18)" }}>
-          <p className="text-[10px] uppercase tracking-[1px] inline-flex items-center gap-1.5" style={{ color: "#4d7a5e" }}>
-            <Timer className="w-3 h-3" /> Resets in
+          <p className="text-[11px] uppercase tracking-[1px] font-bold inline-flex items-center gap-1.5" style={{ color: "#4d7a5e" }}>
+            <Timer className="w-3.5 h-3.5" /> Resets in
           </p>
-          <p className="font-display text-xl font-bold text-parchment tabular-nums">
+          <p className="font-display text-2xl font-bold text-parchment tabular-nums">
             {reset.days}d {reset.hours}h {reset.mins}m
           </p>
-          <p className="text-[10px]" style={{ color: "#4d7a5e" }}>Mon 00:00 Nepal time</p>
+          <p className="text-xs" style={{ color: "#4d7a5e" }}>Monday 00:00 Nepal time</p>
         </div>
       </div>
 
       {/* Score breakdown bars */}
       <Card className="flex flex-col gap-4">
-        <h2 className="font-semibold text-parchment text-sm">Score Breakdown</h2>
+        <h2 className="font-bold text-parchment text-base">This Week&apos;s Actions</h2>
         <div className="flex flex-col gap-3">
           {BREAKDOWN_META.map(({ key, label, max, icon }) => {
             const val = (breakdown as Record<string, number>)[key] ?? 0;
@@ -391,7 +392,7 @@ export default function RewardsPage() {
 
       {/* Badge grid */}
       <Card className="flex flex-col gap-4">
-        <h2 className="font-semibold text-parchment text-sm">Badges</h2>
+        <h2 className="font-bold text-parchment text-base">Badges Earned</h2>
         <div className="grid grid-cols-3 gap-2">
           {(Object.keys(BADGE_META) as (keyof typeof BADGE_META)[]).map((key) => {
             const meta  = BADGE_META[key];
@@ -424,11 +425,8 @@ export default function RewardsPage() {
                   style={{ filter: earned ? "none" : "grayscale(1)", opacity: earned ? 1 : 0.35 }}>
                   {meta.icon}
                 </span>
-                <span className="text-[9px] font-semibold leading-tight" style={{ color: earned ? "#7dc99a" : "#2d5040" }}>
+                <span className="text-[10px] font-semibold leading-tight text-center" style={{ color: earned ? "#7dc99a" : "#2d5040" }}>
                   {meta.label}
-                </span>
-                <span className="text-[8px] mt-1 font-display font-bold" style={{ color: earned ? "#4fa870" : "#2d5040" }}>
-                  20 pts
                 </span>
               </div>
             );

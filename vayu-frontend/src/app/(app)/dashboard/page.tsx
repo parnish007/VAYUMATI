@@ -133,14 +133,14 @@ export default function DashboardPage() {
   if (airLoading || soilLoading) {
     return (
       <div className="flex flex-col gap-3 max-w-5xl mx-auto p-4">
-        <div className="h-7 w-44 rounded-xl animate-shimmer" />
-        <div className="rounded-2xl h-36 animate-shimmer" />
+        <div className="h-7 w-44 rounded-xl animate-shimmer" style={{ background: "#1a2f20" }} />
+        <div className="rounded-2xl h-36 animate-shimmer" style={{ background: "#1a2f20" }} />
         <div className="grid grid-cols-2 gap-2">
-          <div className="h-20 rounded-2xl animate-shimmer" />
-          <div className="h-20 rounded-2xl animate-shimmer" />
+          <div className="h-20 rounded-2xl animate-shimmer" style={{ background: "#1a2f20" }} />
+          <div className="h-20 rounded-2xl animate-shimmer" style={{ background: "#1a2f20" }} />
         </div>
-        <div className="h-28 rounded-2xl animate-shimmer" />
-        <div className="h-40 rounded-2xl animate-shimmer" />
+        <div className="h-28 rounded-2xl animate-shimmer" style={{ background: "#1a2f20" }} />
+        <div className="h-40 rounded-2xl animate-shimmer" style={{ background: "#1a2f20" }} />
       </div>
     );
   }
@@ -199,9 +199,9 @@ export default function DashboardPage() {
             }}
           >
             <div>
-              <p className="text-[10px] uppercase tracking-[0.5px] mb-1" style={{ color: `${color}99` }}>Air Quality Index</p>
-              <p className="font-display font-black leading-none" style={{ fontSize: 52, color }}>{aqi}</p>
-              <p className="text-sm font-semibold mt-1" style={{ color }}>
+              <p className="text-[11px] uppercase tracking-[0.6px] mb-1 font-semibold" style={{ color: `${color}cc` }}>Air Quality Index</p>
+              <p className="font-display font-black leading-none" style={{ fontSize: 64, color, textShadow: `0 0 32px ${color}55` }}>{aqi}</p>
+              <p className="text-base font-bold mt-1.5" style={{ color }}>
                 {aqi > 100 ? "⚠ " : aqi > 50 ? "◉ " : "✓ "}{aqiLabel(aqi)}
               </p>
             </div>
@@ -227,17 +227,17 @@ export default function DashboardPage() {
               style={{ background: "linear-gradient(135deg, rgba(224,90,56,0.14), rgba(196,75,43,0.06))", border: "1px solid rgba(196,75,43,0.28)" }}>
               <div className="absolute -right-2 -top-2 w-12 h-12 rounded-full pointer-events-none"
                 style={{ background: "radial-gradient(circle, rgba(224,90,56,0.22), transparent 70%)" }} />
-              <p className="text-[10px] uppercase tracking-[0.5px] mb-1.5" style={{ color: "#e05a38" }}>≈ Cigarettes/day</p>
-              <p className="font-display text-2xl font-black" style={{ color: "#e05a38" }}>~{cigs}</p>
-              <p className="text-[10px] mt-0.5" style={{ color: "#8a4030" }}>at this AQI, 16h exposure</p>
+              <p className="text-[11px] uppercase tracking-[0.5px] mb-1.5 font-semibold" style={{ color: "#e05a38" }}>≈ Cigarettes/day</p>
+              <p className="font-display text-3xl font-black" style={{ color: "#e05a38" }}>~{cigs}</p>
+              <p className="text-[11px] mt-0.5" style={{ color: "#8a4030" }}>at this AQI, 16h outdoors</p>
             </div>
             <div className="rounded-2xl p-3 relative overflow-hidden"
               style={{ background: "linear-gradient(135deg, rgba(17,34,23,0.9), rgba(26,47,32,0.7))", border: `1px solid ${color}2a` }}>
               <div className="absolute -right-2 -top-2 w-12 h-12 rounded-full pointer-events-none"
                 style={{ background: `radial-gradient(circle, ${color}18, transparent 70%)` }} />
-              <p className="text-[10px] uppercase tracking-[0.5px] mb-1.5" style={{ color: "#8aad96" }}>PM2.5 live</p>
-              <p className="font-display text-2xl font-black tabular-nums" style={{ color }}>{(air.pm25 ?? 0).toFixed(1)}</p>
-              <p className="text-[10px] mt-0.5" style={{ color: "#4d7a5e" }}>μg/m³ · {timeAgo(air.ts)}</p>
+              <p className="text-[11px] uppercase tracking-[0.5px] mb-1.5 font-semibold" style={{ color: "#8aad96" }}>PM2.5 live</p>
+              <p className="font-display text-3xl font-black tabular-nums" style={{ color }}>{(air.pm25 ?? 0).toFixed(1)}</p>
+              <p className="text-[11px] mt-0.5" style={{ color: "#4d7a5e" }}>μg/m³ · {timeAgo(air.ts)}</p>
             </div>
           </div>
         )}
@@ -273,9 +273,9 @@ export default function DashboardPage() {
           >
             <div className="flex items-center gap-2 mb-2">
               <span className="w-4 h-px opacity-70" style={{ background: "#7dc99a" }} />
-              <span className="text-[10px] uppercase tracking-[1px]" style={{ color: "#7dc99a" }}>MATI Advisory</span>
+              <span className="text-[11px] uppercase tracking-[1px] font-bold" style={{ color: "#7dc99a" }}>MATI Advisory</span>
             </div>
-            <p className="text-xs leading-relaxed line-clamp-3" style={{ color: "#c8ddd0" }}>{advisory.body_en}</p>
+            <p className="text-sm leading-relaxed line-clamp-3" style={{ color: "#c8ddd0" }}>{advisory.body_en}</p>
             {advisory.actions.length > 0 && (
               <div className="flex gap-2 mt-3 flex-wrap">
                 {advisory.actions.slice(0, 3).map((a, i) => (
@@ -302,12 +302,12 @@ export default function DashboardPage() {
               </button>
             ))}
           </div>
-          <div className="p-4 flex flex-col gap-2">
-            <p className="text-xs font-semibold text-parchment">{advMsgs[advTab].status}</p>
-            <p className="text-[11px] leading-relaxed" style={{ color: "#8aad96" }}>
+          <div className="p-4 flex flex-col gap-2.5">
+            <p className="text-sm font-bold text-parchment leading-snug">{advMsgs[advTab].status}</p>
+            <p className="text-xs leading-relaxed" style={{ color: "#8aad96" }}>
               <strong className="text-parchment">Why: </strong>{advMsgs[advTab].why}
             </p>
-            <p className="text-[11px] leading-relaxed" style={{ color: "#8aad96" }}>
+            <p className="text-xs leading-relaxed" style={{ color: "#8aad96" }}>
               <strong className="text-parchment">Do now: </strong>{advMsgs[advTab].doNow}
             </p>
           </div>
@@ -316,7 +316,7 @@ export default function DashboardPage() {
         {/* Hourly timeline */}
         {hourlyData.length > 0 && (
           <Card className="flex flex-col gap-3">
-            <h2 className="text-xs font-semibold text-parchment">Hourly AQI</h2>
+            <h2 className="text-sm font-semibold text-parchment">Hourly AQI · Today</h2>
             <HourlyTimeline hours={hourlyData} />
           </Card>
         )}
@@ -324,7 +324,7 @@ export default function DashboardPage() {
         {/* WHO dose bar */}
         {air && (
           <Card className="flex flex-col gap-3">
-            <h2 className="text-xs font-semibold text-parchment">Weekly Dose vs. WHO Limit</h2>
+            <h2 className="text-sm font-semibold text-parchment">Weekly PM2.5 Dose vs. WHO Limit</h2>
             <WHOBar pct={wkPct} meanPm25={wkMeanPm25} />
           </Card>
         )}
@@ -372,7 +372,7 @@ export default function DashboardPage() {
           <div className="flex flex-col gap-3 flex-1">
             <div className="flex items-start justify-between gap-2">
               <div className="flex flex-col gap-1 min-w-0">
-                <h1 className="font-display text-2xl font-semibold text-parchment">Ward {WARD_ID} Air Quality</h1>
+                <h1 className="font-display text-2xl font-bold text-parchment">Ward {WARD_ID} <span style={{ color }}>AQI {aqi}</span> — {aqiLabel(aqi)}</h1>
                 <p className="text-xs" style={{ color: "#4d7a5e" }}>
                   {identity.icon}{" "}
                   {isLive
@@ -443,7 +443,11 @@ export default function DashboardPage() {
                 <SoilCrossSection ph={soil.ph ?? 6.5} />
               </>
             ) : (
-              <p className="text-mist text-sm">No soil data</p>
+              <div className="flex flex-col items-center gap-2 py-6 text-center">
+                <span className="text-2xl opacity-40">🌱</span>
+                <p className="text-sm font-medium" style={{ color: "#4d7a5e" }}>Node B offline</p>
+                <p className="text-xs" style={{ color: "#2d5040" }}>Soil data will appear when the sensor connects</p>
+              </div>
             )}
           </Card>
 
@@ -457,7 +461,11 @@ export default function DashboardPage() {
                 <ReasoningTrace toolCallLog={advisory.tool_call_log ?? []} />
               </>
             ) : (
-              <p className="text-mist text-sm">No advisory yet — trigger one from Ward Grid.</p>
+              <div className="flex flex-col items-center gap-2 py-6 text-center">
+                <span className="text-2xl opacity-40">🤖</span>
+                <p className="text-sm font-medium" style={{ color: "#4d7a5e" }}>MATI is watching</p>
+                <p className="text-xs" style={{ color: "#2d5040" }}>An advisory fires automatically when sensors detect an anomaly</p>
+              </div>
             )}
           </Card>
         </div>

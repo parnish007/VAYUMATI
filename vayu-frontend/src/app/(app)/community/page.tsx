@@ -1841,20 +1841,19 @@ export default function CommunityPage() {
     <div className="flex flex-col gap-4 max-w-2xl mx-auto animate-fade-up pb-4">
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
-          <h1 className="font-display text-2xl font-semibold text-parchment">Community</h1>
+          <h1 className="font-display text-2xl font-bold text-parchment">Community</h1>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
             {isDemo && (
-              <span className="text-[11px]" style={{ color: "#4d7a5e" }}>
+              <span className="text-xs font-medium" style={{ color: "#8aad96" }}>
                 {identity.icon} {identity.name}
               </span>
             )}
-            <span className="text-[11px]" style={{ color: "#2d5040" }}>·</span>
-            <span className="text-[11px]" style={{ color: "#4d7a5e" }}>Ward {WARD_ID}</span>
+            <span className="text-xs" style={{ color: "#4d7a5e" }}>Ward {WARD_ID}</span>
             {air && (
               <>
-                <span className="text-[11px]" style={{ color: "#2d5040" }}>·</span>
-                <span className="flex items-center gap-1 text-[11px] font-semibold tabular-nums" style={{ color: aqiColor(air.aqi) }}>
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: aqiColor(air.aqi) }} />
+                <span className="text-xs" style={{ color: "#2d5040" }}>·</span>
+                <span className="flex items-center gap-1 text-xs font-bold tabular-nums" style={{ color: aqiColor(air.aqi) }}>
+                  <span className="w-2 h-2 rounded-full" style={{ background: aqiColor(air.aqi), animation: "pulse-dot 1.6s infinite" }} />
                   AQI {air.aqi}
                 </span>
               </>
@@ -1873,11 +1872,11 @@ export default function CommunityPage() {
       >
         {(
           [
-            ["wall",        "Wall",   Shield],
-            ["initiatives", "Events", Users],
-            ["board",       "Board",  Trophy],
-            ["score",       "Score",  Medal],
-            ["bari",        "Bari",   Leaf],
+            ["wall",        "Masks",   Shield],
+            ["initiatives", "Events",  Users],
+            ["board",       "Board",   Trophy],
+            ["score",       "Score",   Medal],
+            ["bari",        "Garden",  Leaf],
           ] as const
         ).map(([t, label, Icon]) => (
           <button
@@ -1941,7 +1940,7 @@ export default function CommunityPage() {
               >
                 {compliancePct}%
               </span>
-              <span className="text-[9px] mt-0.5 font-bold uppercase tracking-[0.8px]" style={{ color: "#4d7a5e" }}>
+              <span className="text-[10px] mt-0.5 font-bold uppercase tracking-[0.8px]" style={{ color: "#7dc99a" }}>
                 masked
               </span>
             </div>
@@ -1966,10 +1965,10 @@ export default function CommunityPage() {
                 </div>
                 <span className="text-[9px] font-mono shrink-0" style={{ color: "#2d5040" }}>30%</span>
               </div>
-              <p className="text-[10px] leading-relaxed" style={{ color: compliancePct >= 30 ? "#7dc99a" : "#4d7a5e" }}>
+              <p className="text-xs font-medium leading-relaxed" style={{ color: compliancePct >= 30 ? "#7dc99a" : "#4d7a5e" }}>
                 {compliancePct >= 30
-                  ? "Social proof threshold reached — neighbors seeing neighbors act"
-                  : `${30 - compliancePct}% more needed to reach the social tipping point`}
+                  ? "Social proof threshold reached — neighbors see neighbors act"
+                  : `${30 - compliancePct}% more to reach the social tipping point`}
               </p>
             </div>
           </div>
@@ -1977,10 +1976,10 @@ export default function CommunityPage() {
           {/* Selfie grid */}
           <div>
             <div className="flex items-center justify-between mb-2.5">
-              <h2 className="font-semibold text-parchment text-sm">
-                Community Mask Wall · Ward {WARD_ID}
+              <h2 className="font-bold text-parchment text-base">
+                Community Mask Wall
               </h2>
-              <span className="text-[10px]" style={{ color: "#4d7a5e" }}>
+              <span className="text-xs font-semibold" style={{ color: "#4fa870" }}>
                 {selfies.filter((s) => s.approved).length} verified today
               </span>
             </div>
@@ -2247,7 +2246,7 @@ export default function CommunityPage() {
               style={{ borderBottom: "1px solid rgba(61,139,94,0.12)" }}
             >
               <span className="text-base">👤</span>
-              <h2 className="font-semibold text-parchment text-sm flex-1">
+              <h2 className="font-bold text-parchment text-base flex-1">
                 Member Rankings · Ward {WARD_ID}
               </h2>
               <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
@@ -2342,7 +2341,7 @@ export default function CommunityPage() {
               style={{ borderBottom: "1px solid rgba(61,139,94,0.12)" }}
             >
               <span className="text-base">🏆</span>
-              <h2 className="font-semibold text-parchment text-sm flex-1">Ward Clean Air Board</h2>
+              <h2 className="font-bold text-parchment text-base flex-1">Ward Clean Air Board</h2>
               <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
                 style={{ background: "rgba(61,139,94,0.1)", color: "#4d7a5e" }}>
                 Bhaktapur Metro

@@ -10,7 +10,7 @@ import { BADGE_META, DEFAULT_WARD_ID, getBackendUrl } from "@/lib/constants";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { useAuth } from "@/lib/authContext";
 import { DEMO_PA, DEMO_PA_BY_ROLE, DEMO_USER_IDENTITY, DEMO_CARBON_LEDGER_BY_ROLE } from "@/lib/demoData";
-import { carbonTier, PROVISIONAL_DISCLOSURE } from "@/lib/carbon";
+import { carbonTier, CARBON_META, PROVISIONAL_DISCLOSURE } from "@/lib/carbon";
 
 const WARD_ID = DEFAULT_WARD_ID;
 
@@ -125,6 +125,159 @@ export default function RewardsPage() {
         </div>
       </div>
 
+      {/* ═══ GOLD LADDER · Soil Bond Certificate ════════════════════════ */}
+      <div style={{
+        borderRadius: 16, padding: 1.5,
+        background: "linear-gradient(135deg, #c89530 0%, #6b4822 35%, #9c7320 65%, #c89530 100%)",
+        boxShadow: "0 6px 40px rgba(156,115,32,0.22)",
+      }}>
+        {/* Parchment interior */}
+        <div className="relative overflow-hidden" style={{
+          borderRadius: 14,
+          background: [
+            "repeating-linear-gradient(45deg,  transparent, transparent 24px, rgba(156,115,32,0.04) 24px, rgba(156,115,32,0.04) 25px)",
+            "repeating-linear-gradient(-45deg, transparent, transparent 24px, rgba(156,115,32,0.04) 24px, rgba(156,115,32,0.04) 25px)",
+            "linear-gradient(160deg, #f0e8d0 0%, #ede2c4 45%, #e5d8b0 100%)",
+          ].join(", "),
+        }}>
+
+          {/* Inner double-rule border */}
+          <div className="absolute pointer-events-none" style={{ inset: 10, borderRadius: 6, border: "1px solid rgba(156,115,32,0.28)" }} />
+          <div className="absolute pointer-events-none" style={{ inset: 14, borderRadius: 4, border: "0.5px solid rgba(156,115,32,0.14)" }} />
+
+          {/* Corner scrollwork — TL */}
+          <svg className="absolute top-2 left-2" width="26" height="26" viewBox="0 0 26 26" style={{ color: "#9c7320", opacity: 0.7 }}>
+            <path d="M2,16 Q2,2 16,2" stroke="currentColor" strokeWidth="1.2" fill="none" />
+            <path d="M2,16 Q2,7 7,7 Q13,7 13,2" stroke="currentColor" strokeWidth="0.6" fill="none" opacity="0.5" />
+            <circle cx="2" cy="2" r="1.2" fill="currentColor" />
+          </svg>
+          {/* TR */}
+          <svg className="absolute top-2 right-2" width="26" height="26" viewBox="0 0 26 26" style={{ color: "#9c7320", opacity: 0.7, transform: "scaleX(-1)" }}>
+            <path d="M2,16 Q2,2 16,2" stroke="currentColor" strokeWidth="1.2" fill="none" />
+            <path d="M2,16 Q2,7 7,7 Q13,7 13,2" stroke="currentColor" strokeWidth="0.6" fill="none" opacity="0.5" />
+            <circle cx="2" cy="2" r="1.2" fill="currentColor" />
+          </svg>
+          {/* BL */}
+          <svg className="absolute bottom-2 left-2" width="26" height="26" viewBox="0 0 26 26" style={{ color: "#9c7320", opacity: 0.7, transform: "scaleY(-1)" }}>
+            <path d="M2,16 Q2,2 16,2" stroke="currentColor" strokeWidth="1.2" fill="none" />
+            <path d="M2,16 Q2,7 7,7 Q13,7 13,2" stroke="currentColor" strokeWidth="0.6" fill="none" opacity="0.5" />
+            <circle cx="2" cy="2" r="1.2" fill="currentColor" />
+          </svg>
+          {/* BR */}
+          <svg className="absolute bottom-2 right-2" width="26" height="26" viewBox="0 0 26 26" style={{ color: "#9c7320", opacity: 0.7, transform: "scale(-1,-1)" }}>
+            <path d="M2,16 Q2,2 16,2" stroke="currentColor" strokeWidth="1.2" fill="none" />
+            <path d="M2,16 Q2,7 7,7 Q13,7 13,2" stroke="currentColor" strokeWidth="0.6" fill="none" opacity="0.5" />
+            <circle cx="2" cy="2" r="1.2" fill="currentColor" />
+          </svg>
+
+          {/* Vermillion notary stamp */}
+          <div className="absolute bottom-4 right-4 flex items-center justify-center" style={{
+            width: 68, height: 68, borderRadius: "50%",
+            border: "1.5px solid #a83a1d",
+            transform: "rotate(-13deg)",
+            background: "rgba(168,58,29,0.04)",
+          }}>
+            <div className="flex items-center justify-center" style={{
+              width: 52, height: 52, borderRadius: "50%",
+              border: "1.5px solid rgba(168,58,29,0.55)",
+            }}>
+              <div style={{ fontFamily: "var(--font-bond-mono)", color: "#a83a1d", textAlign: "center", fontSize: 6, letterSpacing: "0.4px", lineHeight: 1.5, fontWeight: 700, textTransform: "uppercase" }}>
+                PROV.<br />Q4 2026<br />VERRA
+              </div>
+            </div>
+          </div>
+
+          {/* Certificate header */}
+          <div className="pt-6 px-7 text-center">
+            <p style={{ fontFamily: "var(--font-bond-mono)", fontSize: 8, letterSpacing: "2.2px", color: "#6b4f1e", textTransform: "uppercase", opacity: 0.75 }}>
+              Carbon Removal Certificate
+            </p>
+            <p style={{ fontFamily: "var(--font-bond-display)", fontSize: 26, color: "#2d1e06", lineHeight: 1.1, marginTop: 4 }}>
+              Soil Bond
+            </p>
+            <p style={{ fontFamily: "var(--font-bond-text)", fontSize: 12, fontStyle: "italic", color: "#8a6a2c", marginTop: 3 }}>
+              {cTier.icon} {cTier.label} · {identity.name}
+            </p>
+            <div style={{ height: 1, background: "linear-gradient(90deg, transparent, #9c7320, transparent)", marginTop: 8 }} />
+          </div>
+
+          {/* Big CO₂e number */}
+          <div className="px-7 pt-4 text-center">
+            <div style={{ fontFamily: "var(--font-bond-display)", fontSize: 64, lineHeight: 1, color: "#2d1e06", letterSpacing: "-2px" }}>
+              {carbon.total_co2e_kg.toFixed(1)}
+            </div>
+            <p style={{ fontFamily: "var(--font-bond-text)", fontSize: 13, fontStyle: "italic", color: "#6b4f1e", marginTop: 2 }}>
+              kilograms CO₂e sequestered
+            </p>
+            <div style={{ marginTop: 10 }}>
+              <span style={{ fontFamily: "var(--font-bond-display)", fontSize: 22, color: "#2d1e06", letterSpacing: "-0.5px" }}>
+                ≈ रू {carbon.total_npr}
+              </span>
+              <p style={{ fontFamily: "var(--font-bond-text)", fontSize: 10, fontStyle: "italic", color: "#8a6a2c", marginTop: 2 }}>
+                ₹3.45 / kg CO₂e · cooperative cash-out at threshold
+              </p>
+            </div>
+          </div>
+
+          {/* Schedule A — sequestration ledger */}
+          <div className="px-7 mt-5">
+            <div style={{ borderTop: "1.5px solid rgba(156,115,32,0.5)" }}>
+              <p style={{ fontFamily: "var(--font-bond-mono)", fontSize: 7.5, letterSpacing: "1.4px", color: "#6b4f1e", textTransform: "uppercase", paddingTop: 6, marginBottom: 6 }}>
+                Schedule A · Sequestration Ledger
+              </p>
+              {(Object.entries(carbon.by_kind) as [keyof typeof CARBON_META, { count: number; co2e_kg: number; npr: number }][])
+                .filter(([, s]) => s.count > 0)
+                .map(([k, s]) => {
+                  const meta = CARBON_META[k];
+                  const code = meta.methodology
+                    .replace("Verra ", "").replace("Gold Standard ", "GS/").replace("Internal narrative", "—");
+                  return (
+                    <div key={k} style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 5 }}>
+                      <span style={{ fontFamily: "var(--font-bond-mono)", fontSize: 10, color: "#4a3810", minWidth: 22, fontWeight: 600 }}>
+                        {String(s.count).padStart(2, "0")}×
+                      </span>
+                      <span style={{ fontFamily: "var(--font-bond-text)", fontSize: 12, color: "#4a3810", flex: 1, borderBottom: "1px dotted rgba(156,115,32,0.3)", paddingBottom: 2 }}>
+                        {meta.label}
+                      </span>
+                      <span style={{ fontFamily: "var(--font-bond-mono)", fontSize: 9, color: "#9c7320", minWidth: 44, textAlign: "right" }}>
+                        {s.co2e_kg.toFixed(1)} kg
+                      </span>
+                      <span style={{ fontFamily: "var(--font-bond-mono)", fontSize: 7, color: "rgba(156,115,32,0.45)", marginLeft: 4, minWidth: 42 }}>
+                        {code}
+                      </span>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+
+          {/* Payout progress */}
+          <div className="px-7 mt-4">
+            <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "var(--font-bond-mono)", fontSize: 8, color: "#6b4f1e", marginBottom: 4 }}>
+              <span>Next payout · {carbon.next_payout_kg} kg</span>
+              <span>{cPayoutPct}%</span>
+            </div>
+            <div style={{ height: 4, borderRadius: 2, overflow: "hidden", background: "rgba(63,46,10,0.18)" }}>
+              <div style={{ height: "100%", borderRadius: 2, width: `${cPayoutPct}%`, background: "linear-gradient(90deg,#9c7320,#c89530)", transition: "width 0.7s" }} />
+            </div>
+            <p style={{ fontFamily: "var(--font-bond-mono)", fontSize: 7.5, color: "#8a6a2c", marginTop: 3 }}>
+              {(carbon.next_payout_kg - carbon.total_co2e_kg).toFixed(1)} kg to threshold
+            </p>
+          </div>
+
+          {/* MRV countersignature ribbon */}
+          <div className="px-7 mt-5 mb-6">
+            <div style={{ borderTop: "1px solid rgba(156,115,32,0.4)", borderBottom: "1px solid rgba(156,115,32,0.4)", padding: "6px 0" }}>
+              <p style={{ fontFamily: "var(--font-bond-text)", fontSize: 10, fontStyle: "italic", color: "#6b4f1e", textAlign: "center", lineHeight: 1.6 }}>
+                MRV countersigned · Node B pH/EC within 1 km · Mero Bari diary
+                <span style={{ color: "#a83a1d", margin: "0 6px" }}>✦</span>
+                {PROVISIONAL_DISCLOSURE}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* ═══ SILVER LADDER · PA Score ═══════════════════════════════════ */}
       <Card className="flex flex-col items-center gap-4 py-6 relative overflow-hidden">
         {/* Tier glow background */}
@@ -176,104 +329,6 @@ export default function RewardsPage() {
           </p>
         </div>
       </Card>
-
-      {/* ═══ GOLD LADDER · Carbon Wallet ═════════════════════════════════ */}
-      <div
-        className="rounded-2xl overflow-hidden relative"
-        style={{
-          background: "linear-gradient(135deg, rgba(240,187,42,0.13), rgba(212,160,23,0.05))",
-          border: `1px solid ${cTier.color}66`,
-          boxShadow: `0 0 32px ${cTier.color}22`,
-        }}
-      >
-        {/* Gold sheen */}
-        <div
-          className="absolute -top-16 -right-16 w-44 h-44 rounded-full pointer-events-none"
-          style={{ background: `radial-gradient(circle, ${cTier.color}30, transparent 70%)` }}
-        />
-
-        <div className="relative px-5 pt-5 pb-3 flex flex-col items-center gap-1">
-          <span className="text-[9px] font-bold uppercase tracking-[1.4px]" style={{ color: "#f0bb2a" }}>
-            ◆ Gold Ladder · Carbon Wallet
-          </span>
-          <div className="flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold mt-1"
-            style={{ background: cTier.bg, border: `1px solid ${cTier.color}55`, color: cTier.color }}>
-            <span>{cTier.icon}</span>
-            <span className="uppercase tracking-[0.8px]">{cTier.label}</span>
-          </div>
-        </div>
-
-        <div className="relative px-5 pb-3 flex items-end justify-center gap-2">
-          <span className="font-display font-black tabular-nums leading-none"
-            style={{ fontSize: 56, color: cTier.color, textShadow: `0 0 24px ${cTier.color}66` }}>
-            {carbon.total_co2e_kg.toFixed(1)}
-          </span>
-          <span className="text-sm font-semibold pb-2" style={{ color: "#8aad96" }}>kg CO₂e</span>
-        </div>
-
-        <div className="relative px-5 pb-3 text-center">
-          <p className="text-base font-bold tabular-nums" style={{ color: "#f0bb2a" }}>
-            ≈ रू {carbon.total_npr}
-          </p>
-          <p className="text-[10px] mt-0.5" style={{ color: "#8aad96" }}>
-            cumulative · cohort cash-out via cooperative
-          </p>
-        </div>
-
-        {/* Progress to next payout */}
-        <div className="relative px-5 pb-3">
-          <div className="flex items-center justify-between text-[10px] mb-1">
-            <span style={{ color: "#8aad96" }}>
-              Next payout · {carbon.next_payout_kg} kg
-            </span>
-            <span className="tabular-nums font-semibold" style={{ color: cTier.color }}>
-              {cPayoutPct}% · {(carbon.next_payout_kg - carbon.total_co2e_kg).toFixed(1)} kg to go
-            </span>
-          </div>
-          <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(0,0,0,0.35)" }}>
-            <div
-              className="h-full rounded-full transition-all duration-700"
-              style={{
-                width: `${cPayoutPct}%`,
-                background: `linear-gradient(90deg, ${cTier.color}, #fbd24a)`,
-              }}
-            />
-          </div>
-        </div>
-
-        {/* By-kind mini breakdown */}
-        <div className="relative px-5 py-3 grid grid-cols-3 gap-2"
-          style={{ borderTop: "1px solid rgba(240,187,42,0.18)" }}>
-          {([
-            { k: "composted" as const,    label: "Compost",  icon: "♻️" },
-            { k: "biochar" as const,      label: "Biochar",  icon: "🔥" },
-            { k: "tree_planted" as const, label: "Trees",    icon: "🌳" },
-          ]).map(({ k, label, icon }) => {
-            const s = carbon.by_kind[k];
-            return (
-              <div key={k} className="flex flex-col text-center">
-                <span className="text-[9px] uppercase tracking-[0.5px]" style={{ color: "#4d7a5e" }}>
-                  {icon} {label}
-                </span>
-                <span className="font-display text-lg font-bold tabular-nums" style={{ color: "#f0bb2a" }}>
-                  {s.count}
-                </span>
-                <span className="text-[9px]" style={{ color: "#8aad96" }}>
-                  {s.co2e_kg.toFixed(1)} kg
-                </span>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Provisional disclosure */}
-        <div className="relative px-5 py-2 text-center"
-          style={{ background: "rgba(0,0,0,0.25)", borderTop: "1px solid rgba(240,187,42,0.15)" }}>
-          <span className="text-[9px] font-semibold uppercase tracking-[0.6px]" style={{ color: "#d4a017" }}>
-            🔒 {PROVISIONAL_DISCLOSURE}
-          </span>
-        </div>
-      </div>
 
       {/* Streak + reset */}
       <div className="grid grid-cols-2 gap-3">

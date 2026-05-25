@@ -115,8 +115,10 @@ export function kindToNpr(kind: CarbonActionKind): number {
   return co2eToNpr(kindToCo2eKg(kind));
 }
 
+// Today is May 2026 — the original Dec 2025 cohort window is in the past.
+// Reframed honestly to the next forward-looking audit window.
 export const PROVISIONAL_DISCLOSURE =
-  "Provisional · Verra cohort opens Dec 2025";
+  "Provisional · next Verra audit window Q4 2026";
 
 // Gold-tier ladder (parallel to silver PA tier ladder)
 export const CARBON_TIERS = [

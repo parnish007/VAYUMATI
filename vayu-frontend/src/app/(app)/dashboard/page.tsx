@@ -232,39 +232,22 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* ─── Ward Gold Carbon strap — mobile primary ─────────────────── */}
-        <div
-          className="rounded-2xl px-4 py-3 flex items-center gap-3 relative overflow-hidden"
-          style={{
-            background: "linear-gradient(135deg, rgba(240,187,42,0.10), rgba(212,160,23,0.04))",
-            border: "1px solid rgba(240,187,42,0.30)",
-          }}
-        >
-          <div
-            className="absolute -top-8 -right-8 w-24 h-24 rounded-full pointer-events-none"
-            style={{ background: "radial-gradient(circle, rgba(240,187,42,0.22), transparent 70%)" }}
-          />
-          <div className="relative w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-            style={{ background: "rgba(240,187,42,0.18)", border: "1.5px solid rgba(240,187,42,0.50)" }}>
-            <span className="text-xl">◆</span>
-          </div>
-          <div className="relative flex-1 min-w-0">
-            <p className="text-[10px] uppercase tracking-[0.6px]" style={{ color: "#f0bb2a" }}>
-              Ward {DEMO_WARD_CARBON_TODAY.ward_id} · Gold Carbon Today
-            </p>
-            <p className="font-display text-lg font-bold leading-tight" style={{ color: "#f0bb2a" }}>
-              {(DEMO_WARD_CARBON_TODAY.co2e_kg_today / 1000).toFixed(2)} tCO₂e
-              <span className="ml-2 text-[11px] font-normal" style={{ color: "#8aad96" }}>
-                · {DEMO_WARD_CARBON_TODAY.contributors_today} contributors
-              </span>
-            </p>
-          </div>
-          <div className="relative shrink-0 text-right">
-            <p className="text-[9px] uppercase tracking-[0.6px]" style={{ color: "#4d7a5e" }}>Rank</p>
-            <p className="font-display text-lg font-bold tabular-nums" style={{ color: "#f0bb2a" }}>
-              #{DEMO_WARD_CARBON_TODAY.rank_among_wards}
-            </p>
-          </div>
+        {/* ─── Ward Soil Bond strap — mobile ───────────────────────────── */}
+        <div className="rounded-lg px-4 py-2.5 flex items-center gap-2.5"
+          style={{ background: "rgba(156,115,32,0.10)", border: "1px solid rgba(156,115,32,0.32)" }}>
+          <span style={{ fontFamily: "var(--font-bond-mono)", fontSize: 8.5, letterSpacing: "1.2px", color: "#9c7320", textTransform: "uppercase", whiteSpace: "nowrap" }}>
+            ◆ Ward {DEMO_WARD_CARBON_TODAY.ward_id} · Soil Bond
+          </span>
+          <span className="font-display font-bold tabular-nums text-sm" style={{ color: "#9c7320" }}>
+            {(DEMO_WARD_CARBON_TODAY.co2e_kg_today / 1000).toFixed(2)} t
+          </span>
+          <span className="text-[10px]" style={{ color: "#8a6a2c" }}>
+            · {DEMO_WARD_CARBON_TODAY.contributors_today} contributors
+          </span>
+          <span className="ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded"
+            style={{ background: "rgba(156,115,32,0.18)", color: "#9c7320", border: "1px solid rgba(156,115,32,0.38)", fontFamily: "var(--font-bond-mono)" }}>
+            #{DEMO_WARD_CARBON_TODAY.rank_among_wards}
+          </span>
         </div>
 
         {/* People Counter */}
@@ -408,39 +391,22 @@ export default function DashboardPage() {
           </div>
         </Card>
 
-        {/* Ward Gold Carbon strap — desktop */}
-        <div
-          className="rounded-2xl px-5 py-3 flex items-center gap-4 relative overflow-hidden"
-          style={{
-            background: "linear-gradient(135deg, rgba(240,187,42,0.10), rgba(212,160,23,0.04))",
-            border: "1px solid rgba(240,187,42,0.30)",
-          }}
-        >
-          <div
-            className="absolute -top-8 -right-8 w-32 h-32 rounded-full pointer-events-none"
-            style={{ background: "radial-gradient(circle, rgba(240,187,42,0.22), transparent 70%)" }}
-          />
-          <div className="relative w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-            style={{ background: "rgba(240,187,42,0.18)", border: "1.5px solid rgba(240,187,42,0.50)" }}>
-            <span className="text-2xl">◆</span>
-          </div>
-          <div className="relative flex-1">
-            <p className="text-[10px] uppercase tracking-[0.6px]" style={{ color: "#f0bb2a" }}>
-              Ward {DEMO_WARD_CARBON_TODAY.ward_id} · Gold Carbon Today
-            </p>
-            <p className="font-display text-xl font-bold" style={{ color: "#f0bb2a" }}>
-              {(DEMO_WARD_CARBON_TODAY.co2e_kg_today / 1000).toFixed(2)} tCO₂e avoided
-              <span className="ml-2 text-xs font-normal" style={{ color: "#8aad96" }}>
-                · {DEMO_WARD_CARBON_TODAY.contributors_today} farmers + residents logged
-              </span>
-            </p>
-          </div>
-          <div className="relative shrink-0 text-right">
-            <p className="text-[10px] uppercase tracking-[0.6px]" style={{ color: "#4d7a5e" }}>Ward Rank</p>
-            <p className="font-display text-xl font-bold tabular-nums" style={{ color: "#f0bb2a" }}>
-              #{DEMO_WARD_CARBON_TODAY.rank_among_wards}
-            </p>
-          </div>
+        {/* Ward Soil Bond strap — desktop */}
+        <div className="rounded-lg px-5 py-2.5 flex items-center gap-4"
+          style={{ background: "rgba(156,115,32,0.10)", border: "1px solid rgba(156,115,32,0.32)" }}>
+          <span style={{ fontFamily: "var(--font-bond-mono)", fontSize: 9, letterSpacing: "1.4px", color: "#9c7320", textTransform: "uppercase", whiteSpace: "nowrap" }}>
+            ◆ Ward {DEMO_WARD_CARBON_TODAY.ward_id} · Soil Bond · Today
+          </span>
+          <span className="font-display font-bold tabular-nums text-base leading-none" style={{ color: "#9c7320" }}>
+            {(DEMO_WARD_CARBON_TODAY.co2e_kg_today / 1000).toFixed(2)} tCO₂e
+          </span>
+          <span className="text-xs" style={{ color: "#8a6a2c" }}>
+            · {DEMO_WARD_CARBON_TODAY.contributors_today} contributors
+          </span>
+          <span className="ml-auto text-[9px] font-bold px-2 py-0.5 rounded"
+            style={{ background: "rgba(156,115,32,0.18)", color: "#9c7320", border: "1px solid rgba(156,115,32,0.40)", fontFamily: "var(--font-bond-mono)", letterSpacing: "0.5px" }}>
+            Rank #{DEMO_WARD_CARBON_TODAY.rank_among_wards}
+          </span>
         </div>
 
         {/* People Counter + Hourly */}
